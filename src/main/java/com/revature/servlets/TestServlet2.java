@@ -1,11 +1,13 @@
-package com.revature.foundations;
+package com.revature.servlets;
 
 import com.revature.util.ConnectionFactory;
 
+import javax.servlet.annotation.WebServlet;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class foundationsDriver {
+
+public class TestServlet2 {
 
     public static void main(String[] args) {
         ConnectionFactory connFactory = ConnectionFactory.getInstance();
