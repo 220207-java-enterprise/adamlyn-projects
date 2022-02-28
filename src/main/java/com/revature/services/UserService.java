@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import com.revature.daos.UserDAO;
+import com.revature.dtos.ConfirmUser;
 import com.revature.dtos.LoginRequest;
 import com.revature.dtos.NewUserRequest;
 import com.revature.dtos.responses.UserResponse;
@@ -52,8 +53,8 @@ public class UserService {
             throw new ResourceConflictException(msg);
         }
         newUser.setUser_id(UUID.randomUUID().toString());
-        newUser.setRole(new UserRole("1", "ADMIN")); // All newly registered users start as BASIC_USER
-        newUser.setActive(true);
+        newUser.setRole(new UserRole(newUserRequest.getRole().getRole_id(), newUserRequest.getRole().getRole()));
+        newUser.setActive(false);
 
         userDAO.save(newUser);
 
@@ -61,15 +62,11 @@ public class UserService {
     }
 
     // Admin
-    public User confirmUser(NewUserRequest newUserRequest) throws IOException {
-        User newUser = newUserRequest.extractUser();
-
-        newUser.setUser_id(UUID.randomUUID().toString());
-        newUser.setRole(new UserRole("7c3521f5-ff75-4e8a-9913-01d15ee4dc97", "BASIC_USER")); // All newly registered users start as BASIC_USER
+    public void confirmUser(ConfirmUser user) throws IOException {
+        User newUser = userDAO.getById(user.getUser_id());
         newUser.setActive(true);
-        userDAO.save(newUser);
-
-        return newUser;
+        userDAO.update(newUser);
+        return ;
     }
 
 
@@ -93,6 +90,13 @@ public class UserService {
 
         return authUser;
 
+    }
+
+    public void deleteUser(ConfirmUser user){
+        User newUser = userDAO.getById(user.getUser_id());
+        newUser.setActive(false);
+        userDAO.update(newUser);
+        return ;
     }
 
 

@@ -1,6 +1,7 @@
 package com.revature.dtos;
 
 import com.revature.models.User;
+import com.revature.models.UserRole;
 
 public class NewUserRequest {
 
@@ -9,6 +10,7 @@ public class NewUserRequest {
     private String email;
     private String username;
     private String password;
+    private UserRole role;
 
 
     public NewUserRequest() {
@@ -63,8 +65,16 @@ public class NewUserRequest {
         this.password = password;
     }
 
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
     public User extractUser(){
-        return new User(given_name, surname, email, username, password);
+        return new User(given_name, surname, email, username, password, role);
     }
 
     @Override

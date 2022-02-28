@@ -62,7 +62,7 @@ public class UserDAO implements CrudDAO<User> {
                 myUser.setUsername(rs.getString("USERNAME"));
                 myUser.setPassword(rs.getString("PASSWORD"));
                 myUser.setActive(rs.getBoolean("IS_ACTIVE"));
-                myUser.setRole(new UserRole(rs.getString("ROLE"), rs.getString("ROLE_ID")));
+                myUser.setRole(new UserRole(rs.getString("ROLE_ID"), rs.getString("ROLE")));
             }
 
         } catch (SQLException e) {
@@ -88,7 +88,7 @@ public class UserDAO implements CrudDAO<User> {
                 myUser.setUsername(rs.getString("USERNAME"));
                 myUser.setPassword(rs.getString("PASSWORD"));
                 myUser.setActive(rs.getBoolean("IS_ACTIVE"));
-                myUser.setRole(new UserRole(rs.getString("ROLE"), rs.getString("ROLE_ID")));
+                myUser.setRole(new UserRole(rs.getString("ROLE_ID"), rs.getString("ROLE")));
             }
 
         } catch (SQLException e) {
@@ -115,7 +115,7 @@ public class UserDAO implements CrudDAO<User> {
                 myUser.setUsername(rs.getString("USERNAME"));
                 myUser.setPassword(rs.getString("PASSWORD"));
                 myUser.setActive(rs.getBoolean("IS_ACTIVE"));
-                myUser.setRole(new UserRole(rs.getString("ROLE"), rs.getString("ROLE_ID")));
+                myUser.setRole(new UserRole(rs.getString("ROLE_ID"), rs.getString("ROLE")));
             }
 
         } catch (SQLException e) {
@@ -142,7 +142,7 @@ public class UserDAO implements CrudDAO<User> {
                 myUser.setUsername(rs.getString("USERNAME"));
                 myUser.setPassword(rs.getString("PASSWORD"));
                 myUser.setActive(rs.getBoolean("IS_ACTIVE"));
-                myUser.setRole(new UserRole(rs.getString("ROLE"), rs.getString("ROLE_ID")));
+                myUser.setRole(new UserRole(rs.getString("ROLE_ID"), rs.getString("ROLE")));
             }
 
         } catch (SQLException e) {
@@ -170,7 +170,7 @@ public class UserDAO implements CrudDAO<User> {
                 myUser.setUsername(rs.getString("USERNAME"));
                 myUser.setPassword(rs.getString("PASSWORD"));
                 myUser.setActive(rs.getBoolean("IS_ACTIVE"));
-                myUser.setRole(new UserRole(rs.getString("ROLE"), rs.getString("ROLE_ID")));
+                myUser.setRole(new UserRole(rs.getString("ROLE_ID"), rs.getString("ROLE")));
 
                 selectedUsers.add(myUser);
             }
@@ -190,8 +190,8 @@ public class UserDAO implements CrudDAO<User> {
                     "SURNAME = ?, " +
                     "EMAIL = ?, " +
                     "USERNAME = ?, " +
-                    "PASSWORD = ? " +
-                    "IS_ACTIVE = ? " +
+                    "PASSWORD = ?, " +
+                    "IS_ACTIVE = ?, " +
                     "ROLE_ID = ? " +
                     "WHERE USER_ID = ?");
             pstmt.setString(1, updatedObject.getGiven_name());
@@ -202,12 +202,15 @@ public class UserDAO implements CrudDAO<User> {
             pstmt.setBoolean(6, updatedObject.isActive());
             pstmt.setString(7, updatedObject.getRole().getRole_id());
             pstmt.setString(8, updatedObject.getUser_id());
+            System.out.println(pstmt);
             int rowsInserted = pstmt.executeUpdate();
+            System.out.println(rowsInserted);
             if (rowsInserted != 1) {
                 throw new ResourcePersistenceException("Failed to update user data within datasource.");
             }
             conn.commit();
         } catch (SQLException e) {
+            System.out.println();
             throw new DataSourceException(e);
         }
     }

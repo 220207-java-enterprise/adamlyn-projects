@@ -22,7 +22,7 @@ public class UserResponse {
         this.email = user.getEmail();
         this.username = user.getUsername();
         this.isActive = user.isActive();
-        this.role = user.getRole().getRole_id();
+        this.role = user.getRole().getRole();
     }
 
     public String getUser_id() {
@@ -79,5 +79,18 @@ public class UserResponse {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "UserResponse{" +
+                "user_id='" + user_id + '\'' +
+                ", given_name='" + given_name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", isActive=" + isActive +
+                ", role='" + role + '\'' +
+                '}';
     }
 }

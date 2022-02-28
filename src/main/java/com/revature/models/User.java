@@ -27,6 +27,16 @@ public class User {
         this.password = password;
     }
 
+    public User(String given_name, String surname, String email, String username,
+                String password, UserRole role) {
+        this.given_name = given_name;
+        this.surname = surname;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
+
     public String getUser_id() {
         return user_id;
     }
@@ -121,15 +131,15 @@ public class User {
 
     @Override
     public String toString() {
-        return "AppUser{" +
-                "id='" + user_id + '\'' +
-                ", given_name ='" + given_name + '\'' +
-                ", surname ='" + surname + '\'' +
+        return "User{" +
+                "user_id='" + user_id + '\'' +
+                ", given_name='" + given_name + '\'' +
+                ", surname='" + surname + '\'' +
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", password='" + role +
+                ", isActive=" + isActive +
+                ", role=" + role +
                 '}';
     }
-
 }
