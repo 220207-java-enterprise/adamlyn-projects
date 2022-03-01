@@ -1,13 +1,15 @@
 package com.revature.services;
 
 import com.revature.daos.UserDAO;
-import com.revature.dtos.ConfirmUser;
-import com.revature.dtos.LoginRequest;
-import com.revature.dtos.NewUserRequest;
+import com.revature.daos.UserRoleDAO;
+import com.revature.dtos.requests.UserUpdateRequest;
+import com.revature.dtos.requests.LoginRequest;
+import com.revature.dtos.requests.NewUserRequest;
 import com.revature.dtos.responses.UserResponse;
 import com.revature.models.User;
 import com.revature.models.UserRole;
 import com.revature.util.exceptions.AuthenticationException;
+import com.revature.util.exceptions.ForbiddenException;
 import com.revature.util.exceptions.InvalidRequestException;
 import com.revature.util.exceptions.ResourceConflictException;
 
@@ -19,9 +21,11 @@ import java.util.UUID;
 public class UserService {
 
     private UserDAO userDAO;
+    private UserRoleDAO userRoleDAO;
 
-    public UserService(UserDAO userDAO){
+    public UserService(UserDAO userDAO, UserRoleDAO userRoleDAO){
         this.userDAO = userDAO;
+        this.userRoleDAO = userRoleDAO;
     }
 
 
@@ -39,7 +43,9 @@ public class UserService {
     public User register(NewUserRequest newUserRequest) throws IOException {
         User newUser = newUserRequest.extractUser();
 
-        if (!isUserValid(newUser)) {
+
+
+        if (!isUserValid(newUser) || newUserRequest.getRole().equals("ADMIN")) {
             throw new InvalidRequestException("Bad registration details were given.");
         }
 
@@ -52,23 +58,16 @@ public class UserService {
             if (!emailAvailable) msg += "email";
             throw new ResourceConflictException(msg);
         }
+        UserRole myRole = userRoleDAO.getById(newUserRequest.getRole());
+        newUser.setRole(myRole);
+
         newUser.setUser_id(UUID.randomUUID().toString());
-        newUser.setRole(new UserRole(newUserRequest.getRole().getRole_id(), newUserRequest.getRole().getRole()));
         newUser.setActive(false);
 
         userDAO.save(newUser);
 
         return newUser;
     }
-
-    // Admin
-    public void confirmUser(ConfirmUser user) throws IOException {
-        User newUser = userDAO.getById(user.getUser_id());
-        newUser.setActive(true);
-        userDAO.update(newUser);
-        return ;
-    }
-
 
 
     public User login(LoginRequest loginRequest) {
@@ -87,18 +86,50 @@ public class UserService {
         if (authUser == null) {
             throw new AuthenticationException();
         }
+        if (!authUser.isActive())
+            throw new ForbiddenException();
 
         return authUser;
-
     }
 
-    public void deleteUser(ConfirmUser user){
+    public void deleteUser(UserUpdateRequest user){
         User newUser = userDAO.getById(user.getUser_id());
         newUser.setActive(false);
         userDAO.update(newUser);
         return ;
     }
 
+    // Admin update user status
+    public void updateUser(UserUpdateRequest userUpdate) throws IOException {
+
+        User newUser = userDAO.getById(userUpdate.getUser_id());
+        UserRole myRole = userRoleDAO.getById(userUpdate.getRole());
+
+        if(userUpdate.getGiven_name() != null)
+            newUser.setGiven_name(userUpdate.getGiven_name());
+        if(userUpdate.getSurname() != null)
+            newUser.setGiven_name(userUpdate.getGiven_name());
+        if(userUpdate.getEmail() != null)
+            newUser.setEmail(userUpdate.getEmail());
+        if(userUpdate.getUsername() != null)
+            newUser.setUsername(userUpdate.getUsername());
+        if(userUpdate.getPassword() != null)
+            newUser.setPassword(userUpdate.getPassword());
+        if(userUpdate.isActive() != null )
+            newUser.setActive(userUpdate.isActive());
+        if(userUpdate.getRole() != null)
+            newUser.setRole(myRole);
+
+//        newUser.setRole(myRole);
+//        newUser.setGiven_name(userUpdate.getGiven_name());
+//        newUser.setSurname(userUpdate.getSurname());
+//        newUser.setEmail(userUpdate.getEmail());
+//        newUser.setUsername(userUpdate.getUsername());
+//        newUser.setPassword(userUpdate.getPassword());
+//        newUser.setActive(userUpdate.isActive());
+        System.out.println(newUser);
+        userDAO.update(newUser);
+    }
 
     public boolean isEmailValid(String email) {
         if (email == null) return false;

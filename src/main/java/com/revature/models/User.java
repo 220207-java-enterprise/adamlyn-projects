@@ -9,7 +9,7 @@ public class User {
     private String email;
     private String username;
     private String password;
-    private boolean isActive;
+    private Boolean isActive;
 
     private UserRole role;
 
@@ -19,9 +19,9 @@ public class User {
         super(); // not required, but it bugs me personally not to have it
     }
 
-    public User(String given_name, String lastName, String email, String username, String password) {
+    public User(String given_name, String surname, String email, String username, String password) {
         this.given_name = given_name;
-        this.surname = lastName;
+        this.surname = surname;
         this.email = email;
         this.username = username;
         this.password = password;
@@ -35,6 +35,14 @@ public class User {
         this.username = username;
         this.password = password;
         this.role = role;
+    }
+
+    public User(String given_name, String surname, String email, String username, Boolean isActive) {
+        this.given_name = given_name;
+        this.surname = surname;
+        this.email = email;
+        this.username = username;
+        this.isActive = isActive;
     }
 
     public String getUser_id() {
@@ -85,11 +93,11 @@ public class User {
         this.password = password;
     }
 
-    public boolean isActive() {
+    public Boolean isActive() {
         return isActive;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         isActive = active;
     }
 

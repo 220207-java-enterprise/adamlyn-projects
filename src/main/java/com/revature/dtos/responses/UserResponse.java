@@ -8,7 +8,7 @@ public class UserResponse {
     private String surname;
     private String email;
     private String username;
-    private boolean isActive;
+    private Boolean isActive;
     private String role;
 
     public UserResponse(){
@@ -65,11 +65,11 @@ public class UserResponse {
         this.username = username;
     }
 
-    public boolean isActive() {
+    public Boolean isActive() {
         return isActive;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         isActive = active;
     }
 

@@ -1,4 +1,4 @@
-package com.revature.dtos;
+package com.revature.dtos.requests;
 
 public class ResourceCreationResponse {
     private String id;

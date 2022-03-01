@@ -1,7 +1,7 @@
 package com.revature.services;
 
 import com.revature.daos.ReimbursementDAO;
-import com.revature.dtos.NewReimbursementRequest;
+import com.revature.dtos.requests.NewReimbursementRequest;
 import com.revature.dtos.responses.ReimbursementResponse;
 import com.revature.models.Reimbursement;
 import com.revature.models.ReimbursementStatus;

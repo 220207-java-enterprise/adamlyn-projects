@@ -2,10 +2,11 @@ package com.revature.servlets;
 
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.revature.dtos.LoginRequest;
+import com.revature.dtos.requests.LoginRequest;
 import com.revature.dtos.responses.Principal;
 import com.revature.services.UserService;
 import com.revature.util.exceptions.AuthenticationException;
+import com.revature.util.exceptions.ForbiddenException;
 import com.revature.util.exceptions.InvalidRequestException;
 
 import javax.servlet.ServletException;
@@ -47,6 +48,8 @@ public class AuthServlet extends HttpServlet {
             resp.setStatus(400);
         } catch (AuthenticationException e) {
             resp.setStatus(401); // UNAUTHORIZED (no user found with provided credentials)
+        }catch (ForbiddenException e) {
+            resp.setStatus(403); // Forbidden (user isn't allowed to login to an inactive account)
         } catch (Exception e) {
             e.printStackTrace();
             resp.setStatus(500);

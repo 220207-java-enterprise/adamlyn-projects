@@ -2,19 +2,17 @@ package com.revature.servlets;
 
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.revature.dtos.ConfirmUser;
-import com.revature.dtos.NewUserRequest;
-import com.revature.dtos.ResourceCreationResponse;
+import com.revature.dtos.requests.UserUpdateRequest;
+import com.revature.dtos.requests.NewUserRequest;
+import com.revature.dtos.requests.ResourceCreationResponse;
 import com.revature.dtos.responses.Principal;
 import com.revature.dtos.responses.UserResponse;
 import com.revature.models.User;
-import com.revature.models.UserRole;
 import com.revature.services.UserService;
 import com.revature.util.exceptions.InvalidRequestException;
 import com.revature.util.exceptions.ResourceConflictException;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,6 +32,7 @@ public class UserServlet extends HttpServlet {
         this.mapper = mapper;
     }
 
+    // Admin get all users
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
@@ -57,18 +56,10 @@ public class UserServlet extends HttpServlet {
         resp.getWriter().write(payload);
     }
 
+    //Anyone register new user/manager
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String[] reqFrags = req.getRequestURI().split("/");
-        if (reqFrags.length == 4 && reqFrags[3].equals("registerUser")) {
-            registerUser(req, resp);
-            return; // necessary, otherwise we end up doing more work than was requested
-        }
-        if(reqFrags.length == 4 && reqFrags[3].equals("registerManager")) {
-            registerManager(req, resp);
-            return;
-        }
-        resp.setStatus(404);
+        register(req, resp);
 }
 
     @Override
@@ -86,37 +77,16 @@ public class UserServlet extends HttpServlet {
             resp.setStatus(403); // FORBIDDEN
         }
         String[] reqFrags = req.getRequestURI().split("/");
-        if (reqFrags.length == 4 && reqFrags[3].equals("confirmUser")) {
-            confirmUser(req, resp);
-            return; // necessary, otherwise we end up doing more work than was requested
-        }
-        if (reqFrags.length == 4 && reqFrags[3].equals("deleteUser")) {
-            deleteUser(req, resp);
+            updateUser(req, resp);
             return; // necessary, otherwise we end up doing more work than was requested
         }
 
-    }
 
-    protected void deleteUser (HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            ConfirmUser confirmandi = mapper.readValue(req.getInputStream(), ConfirmUser.class);
-
-             userService.deleteUser(confirmandi);
-
-            resp.setStatus(204);
-            resp.setContentType("application/json");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            resp.setStatus(500);
-        }
-    }
-
-    protected void confirmUser (HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+    protected void updateUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         try{
-            ConfirmUser confirmandi = mapper.readValue(req.getInputStream(), ConfirmUser.class);
+            UserUpdateRequest updateUser = mapper.readValue(req.getInputStream(), UserUpdateRequest.class);
 
-            userService.confirmUser(confirmandi);
+            userService.updateUser(updateUser);
 
             resp.setStatus(204);
             resp.setContentType("application/json");
@@ -127,39 +97,14 @@ public class UserServlet extends HttpServlet {
 
     }
 
-    protected void registerUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+    // User can register as manager or user
+    protected void register(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         PrintWriter respWriter = resp.getWriter();
 
         try {
 
             NewUserRequest newUserRequest = mapper.readValue(req.getInputStream(), NewUserRequest.class);
-            UserRole role = new UserRole("2", "USER");
-            newUserRequest.setRole(role);
-            User newUser = userService.register(newUserRequest);
-
-            resp.setStatus(201);
-            resp.setContentType("application/json");
-            String payload = mapper.writeValueAsString(new ResourceCreationResponse(newUser.getUser_id()));
-            respWriter.write(payload);
-
-        } catch (InvalidRequestException | DatabindException e) {
-            resp.setStatus(400); // BAD REQUEST
-        } catch (ResourceConflictException e) {
-            resp.setStatus(409); // CONFLICT
-        } catch (Exception e) {
-            e.printStackTrace(); // include for debugging purposes; ideally log it to a file
-            resp.setStatus(500);
-        }
-    }
-
-    protected void registerManager(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter respWriter = resp.getWriter();
-        try {
-
-            NewUserRequest newUserRequest = mapper.readValue(req.getInputStream(), NewUserRequest.class);
-            System.out.println(newUserRequest+ " from managerservlet");
-            UserRole role = new UserRole("3", "Manager");
-            newUserRequest.setRole(role);
+            System.out.println(newUserRequest);
             User newUser = userService.register(newUserRequest);
 
             resp.setStatus(201);

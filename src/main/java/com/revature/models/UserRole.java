@@ -50,5 +50,8 @@ public class UserRole {
                 ", role='" + role + '\'' +
                 '}';
     }
+
+    public void getById(UserRole role) {
+    }
 }
 

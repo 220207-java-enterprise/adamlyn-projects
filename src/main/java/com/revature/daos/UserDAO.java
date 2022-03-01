@@ -1,6 +1,8 @@
 package com.revature.daos;
 
+import com.revature.dtos.responses.UserResponse;
 import com.revature.models.*;
+import com.revature.models.UserRole;
 import com.revature.util.ConnectionFactory;
 import com.revature.util.exceptions.DataSourceException;
 import com.revature.util.exceptions.ResourcePersistenceException;
@@ -71,6 +73,8 @@ public class UserDAO implements CrudDAO<User> {
 
         return myUser;
     }
+
+
 
     public User getByUsername(String username) {
         User myUser = null;
@@ -161,6 +165,34 @@ public class UserDAO implements CrudDAO<User> {
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
             ResultSet rs = conn.createStatement().executeQuery(rootCall);
+            while(rs.next()) {
+                myUser = new User();
+                myUser.setUser_id(rs.getString("USER_ID"));
+                myUser.setGiven_name(rs.getString("GIVEN_NAME"));
+                myUser.setSurname(rs.getString("SURNAME"));
+                myUser.setEmail(rs.getString("EMAIL"));
+                myUser.setUsername(rs.getString("USERNAME"));
+                myUser.setPassword(rs.getString("PASSWORD"));
+                myUser.setActive(rs.getBoolean("IS_ACTIVE"));
+                myUser.setRole(new UserRole(rs.getString("ROLE_ID"), rs.getString("ROLE")));
+
+                selectedUsers.add(myUser);
+            }
+        } catch (SQLException e) {
+            throw new DataSourceException(e);
+        }
+        return selectedUsers;
+    }
+
+    public ArrayList<User> getAllByActive(UserResponse active) {
+        ArrayList<User> selectedUsers = new ArrayList<User>();
+        User myUser = null;
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            PreparedStatement pstmt = conn.prepareStatement(rootCall + " WHERE IS_ACTIVE = ?");
+            pstmt.setBoolean(1, active.isActive());
+
+            ResultSet rs = pstmt.executeQuery();
             while(rs.next()) {
                 myUser = new User();
                 myUser.setUser_id(rs.getString("USER_ID"));
