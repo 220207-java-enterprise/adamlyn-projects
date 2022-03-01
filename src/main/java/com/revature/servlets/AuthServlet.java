@@ -34,7 +34,6 @@ public class AuthServlet extends HttpServlet {
         try {
 
             LoginRequest loginRequest = mapper.readValue(req.getInputStream(), LoginRequest.class);
-            System.out.println(loginRequest);
             Principal principal = new Principal(userService.login(loginRequest));
             String payload = mapper.writeValueAsString(principal);
 

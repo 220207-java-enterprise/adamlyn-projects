@@ -43,8 +43,6 @@ public class UserService {
     public User register(NewUserRequest newUserRequest) throws IOException {
         User newUser = newUserRequest.extractUser();
 
-
-
         if (!isUserValid(newUser) || newUserRequest.getRole().equals("ADMIN")) {
             throw new InvalidRequestException("Bad registration details were given.");
         }
@@ -82,13 +80,12 @@ public class UserService {
         // TODO encrypt provided password (assumes password encryption is in place) to see if it matches what is in the DB
 
         User authUser = userDAO.getByUsernameandPassword(username, password);
-        System.out.println(authUser + " fsdf " + authUser.isActive());
 
+        // Check for if user exists then check if user is active
         if (authUser == null) {
             throw new AuthenticationException();
         }
         if (!authUser.isActive()) {
-            System.out.println("triggered");
             throw new ForbiddenException();
         }
 
@@ -99,11 +96,13 @@ public class UserService {
     public void updateUser(UserUpdateRequest userUpdate) throws IOException {
 
         User newUser = userDAO.getById(userUpdate.getUser_id());
-//        System.out.println(newUser + " adsa " + newUser.getRole().getRole().equals("ADMIN"));
         if (newUser.getRole().getRole().equals("ADMIN"))
-            throw new ForbiddenException("Cannot remove admin");
+            throw new InvalidRequestException("Cannot remove admin");
+        if (userUpdate.getRole().equals("ADMIN"))
+            throw new InvalidRequestException("Cannot promote to admin");
         UserRole myRole = userRoleDAO.getById(userUpdate.getRole());
 
+        //Check for any updates then prepare User to be updated
         if(userUpdate.getGiven_name() != null)
             newUser.setGiven_name(userUpdate.getGiven_name());
         if(userUpdate.getSurname() != null)

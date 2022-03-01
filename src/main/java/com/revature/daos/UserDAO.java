@@ -147,7 +147,6 @@ public class UserDAO implements CrudDAO<User> {
                 myUser.setPassword(rs.getString("PASSWORD"));
                 myUser.setActive(rs.getBoolean("IS_ACTIVE"));
                 myUser.setRole(new UserRole(rs.getString("ROLE_ID"), rs.getString("ROLE")));
-                System.out.println(myUser);
             }
 
         } catch (SQLException e) {

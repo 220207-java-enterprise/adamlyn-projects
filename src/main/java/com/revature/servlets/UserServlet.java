@@ -43,7 +43,6 @@ public class UserServlet extends HttpServlet {
         }
 
         Principal requester = (Principal) session.getAttribute("authUser");
-        System.out.println(requester.getRole() + " " );
 
         if (!requester.getRole().equals("ADMIN")) {
             resp.setStatus(403); // FORBIDDEN
@@ -73,7 +72,6 @@ public class UserServlet extends HttpServlet {
         }
 
         Principal requester = (Principal) session.getAttribute("authUser");
-        System.out.println(requester.getRole() + " " );
 
         if (!requester.getRole().equals("ADMIN")) {
             resp.setStatus(403); // FORBIDDEN
@@ -107,7 +105,6 @@ public class UserServlet extends HttpServlet {
         try {
 
             NewUserRequest newUserRequest = mapper.readValue(req.getInputStream(), NewUserRequest.class);
-            System.out.println(newUserRequest);
             User newUser = userService.register(newUserRequest);
 
             resp.setStatus(201);
