@@ -9,6 +9,7 @@ import com.revature.dtos.responses.Principal;
 import com.revature.dtos.responses.UserResponse;
 import com.revature.models.User;
 import com.revature.services.UserService;
+import com.revature.util.exceptions.ForbiddenException;
 import com.revature.util.exceptions.InvalidRequestException;
 import com.revature.util.exceptions.ResourceConflictException;
 
@@ -60,8 +61,9 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         register(req, resp);
-}
+    }
 
+    // Admin only update/approve/soft delete user
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
@@ -76,10 +78,8 @@ public class UserServlet extends HttpServlet {
         if (!requester.getRole().equals("ADMIN")) {
             resp.setStatus(403); // FORBIDDEN
         }
-        String[] reqFrags = req.getRequestURI().split("/");
-            updateUser(req, resp);
-            return; // necessary, otherwise we end up doing more work than was requested
-        }
+        updateUser(req, resp);
+    }
 
 
     protected void updateUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
@@ -90,7 +90,10 @@ public class UserServlet extends HttpServlet {
 
             resp.setStatus(204);
             resp.setContentType("application/json");
-        }catch (Exception e){
+
+        }catch(InvalidRequestException e){
+            resp.setStatus(405);
+        } catch (Exception e){
             e.printStackTrace();
             resp.setStatus(500);
         }

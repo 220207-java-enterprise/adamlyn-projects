@@ -82,27 +82,26 @@ public class UserService {
         // TODO encrypt provided password (assumes password encryption is in place) to see if it matches what is in the DB
 
         User authUser = userDAO.getByUsernameandPassword(username, password);
+        System.out.println(authUser + " fsdf " + authUser.isActive());
 
         if (authUser == null) {
             throw new AuthenticationException();
         }
-        if (!authUser.isActive())
+        if (!authUser.isActive()) {
+            System.out.println("triggered");
             throw new ForbiddenException();
+        }
 
         return authUser;
-    }
-
-    public void deleteUser(UserUpdateRequest user){
-        User newUser = userDAO.getById(user.getUser_id());
-        newUser.setActive(false);
-        userDAO.update(newUser);
-        return ;
     }
 
     // Admin update user status
     public void updateUser(UserUpdateRequest userUpdate) throws IOException {
 
         User newUser = userDAO.getById(userUpdate.getUser_id());
+//        System.out.println(newUser + " adsa " + newUser.getRole().getRole().equals("ADMIN"));
+        if (newUser.getRole().getRole().equals("ADMIN"))
+            throw new ForbiddenException("Cannot remove admin");
         UserRole myRole = userRoleDAO.getById(userUpdate.getRole());
 
         if(userUpdate.getGiven_name() != null)
@@ -120,13 +119,6 @@ public class UserService {
         if(userUpdate.getRole() != null)
             newUser.setRole(myRole);
 
-//        newUser.setRole(myRole);
-//        newUser.setGiven_name(userUpdate.getGiven_name());
-//        newUser.setSurname(userUpdate.getSurname());
-//        newUser.setEmail(userUpdate.getEmail());
-//        newUser.setUsername(userUpdate.getUsername());
-//        newUser.setPassword(userUpdate.getPassword());
-//        newUser.setActive(userUpdate.isActive());
         System.out.println(newUser);
         userDAO.update(newUser);
     }

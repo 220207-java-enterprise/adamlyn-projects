@@ -147,6 +147,7 @@ public class UserDAO implements CrudDAO<User> {
                 myUser.setPassword(rs.getString("PASSWORD"));
                 myUser.setActive(rs.getBoolean("IS_ACTIVE"));
                 myUser.setRole(new UserRole(rs.getString("ROLE_ID"), rs.getString("ROLE")));
+                System.out.println(myUser);
             }
 
         } catch (SQLException e) {
@@ -234,9 +235,7 @@ public class UserDAO implements CrudDAO<User> {
             pstmt.setBoolean(6, updatedObject.isActive());
             pstmt.setString(7, updatedObject.getRole().getRole_id());
             pstmt.setString(8, updatedObject.getUser_id());
-            System.out.println(pstmt);
             int rowsInserted = pstmt.executeUpdate();
-            System.out.println(rowsInserted);
             if (rowsInserted != 1) {
                 throw new ResourcePersistenceException("Failed to update user data within datasource.");
             }
