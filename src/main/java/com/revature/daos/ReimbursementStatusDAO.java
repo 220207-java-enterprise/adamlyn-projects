@@ -24,7 +24,7 @@ public class ReimbursementStatusDAO implements CrudDAO<ReimbursementStatus> {
     public ReimbursementStatus getById(String status) {
         ReimbursementStatus myStatus = null;
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            PreparedStatement pstmt = conn.prepareStatement(rootCall + " WHERE STATUS = ?");
+            PreparedStatement pstmt = conn.prepareStatement(rootCall + " WHERE STATUS_ID = ?");
             pstmt.setString(1, status);
 
             ResultSet rs = pstmt.executeQuery();

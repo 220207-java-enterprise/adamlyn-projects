@@ -15,8 +15,6 @@ public class UserUpdateRequest {
 
         private String role;
 
-        // TODO create a Role enum
-
         public UserUpdateRequest() {
             super(); // not required, but it bugs me personally not to have it
         }

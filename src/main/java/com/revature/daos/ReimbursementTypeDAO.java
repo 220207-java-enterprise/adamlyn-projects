@@ -24,7 +24,7 @@ public class ReimbursementTypeDAO implements CrudDAO<ReimbursementType>{
     public ReimbursementType getById(String role_ID) {
         ReimbursementType myType = null;
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            PreparedStatement pstmt = conn.prepareStatement(rootCall + " WHERE TYPE = ?");
+            PreparedStatement pstmt = conn.prepareStatement(rootCall + " WHERE TYPE_ID = ?");
             pstmt.setString(1, role_ID);
 
             ResultSet rs = pstmt.executeQuery();

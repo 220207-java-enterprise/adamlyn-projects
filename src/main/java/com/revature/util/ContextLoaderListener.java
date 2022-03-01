@@ -1,8 +1,8 @@
 package com.revature.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.revature.daos.UserDAO;
-import com.revature.daos.UserRoleDAO;
+import com.revature.daos.*;
+import com.revature.services.ReimbursementService;
 import com.revature.services.UserService;
 import com.revature.servlets.*;
 import com.revature.servlets.AuthServlet;
@@ -24,11 +24,17 @@ public class ContextLoaderListener implements ServletContextListener {
         UserDAO userDAO = new UserDAO();
         UserRoleDAO userRoleDAO = new UserRoleDAO();
 
+        ReimbursementDAO reimbDAO = new ReimbursementDAO();
+        ReimbursementTypeDAO reimbTypeDAO = new ReimbursementTypeDAO();
+        ReimbursementStatusDAO reimbStatusDAO = new ReimbursementStatusDAO();
+
         UserService userService = new UserService(userDAO, userRoleDAO);
+        ReimbursementService reimbService = new ReimbursementService(reimbDAO,
+                reimbTypeDAO,reimbStatusDAO, userDAO);
         TestServlet testServlet = new TestServlet(userService, mapper);
         UserServlet userServlet = new UserServlet(userService, mapper);
         AuthServlet authServlet = new AuthServlet(userService, mapper);
-        ReimbursementServlet reimbursementServlet = new ReimbursementServlet(userService, mapper);
+        ReimbursementServlet reimbursementServlet = new ReimbursementServlet(reimbService, mapper);
 
         // Programmatic Servlet Registration
         ServletContext context = sce.getServletContext();

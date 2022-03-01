@@ -43,14 +43,12 @@ public class UserServlet extends HttpServlet {
         }
 
         Principal requester = (Principal) session.getAttribute("authUser");
-
         if (!requester.getRole().equals("ADMIN")) {
             resp.setStatus(403); // FORBIDDEN
             return;
         }
 
         List<UserResponse> users = userService.getAllEmployees();
-        System.out.println(users);
         String payload = mapper.writeValueAsString(users);
         resp.setContentType("application/json");
         resp.getWriter().write(payload);
@@ -72,10 +70,10 @@ public class UserServlet extends HttpServlet {
         }
 
         Principal requester = (Principal) session.getAttribute("authUser");
-
         if (!requester.getRole().equals("ADMIN")) {
             resp.setStatus(403); // FORBIDDEN
         }
+
         updateUser(req, resp);
     }
 

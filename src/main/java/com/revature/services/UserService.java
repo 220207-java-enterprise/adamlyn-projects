@@ -40,7 +40,7 @@ public class UserService {
     }
 
     // Admin/User
-    public User register(NewUserRequest newUserRequest) throws IOException {
+    public User register(NewUserRequest newUserRequest) {
         User newUser = newUserRequest.extractUser();
 
         if (!isUserValid(newUser) || newUserRequest.getRole().equals("ADMIN")) {
