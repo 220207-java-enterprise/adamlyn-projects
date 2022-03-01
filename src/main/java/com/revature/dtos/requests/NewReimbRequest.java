@@ -1,9 +1,8 @@
 package com.revature.dtos.requests;
 
 import com.revature.models.Reimbursement;
-import com.revature.models.User;
 
-public class NewReimbursementRequest {
+public class NewReimbRequest {
 
     private Float amount;
     private String submitted;
@@ -13,10 +12,10 @@ public class NewReimbursementRequest {
     private String type_id;
 
 
-    public NewReimbursementRequest(){super();}
+    public NewReimbRequest(){super();}
 
-    public NewReimbursementRequest(Float amount, String submitted, String description, String receipt,
-                                   String author_id, String type_id) {
+    public NewReimbRequest(Float amount, String submitted, String description, String receipt,
+                           String author_id, String type_id) {
         this.amount = amount;
         this.submitted = submitted;
         this.description = description;

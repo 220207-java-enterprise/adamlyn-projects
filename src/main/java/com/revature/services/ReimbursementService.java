@@ -1,7 +1,7 @@
 package com.revature.services;
 
 import com.revature.daos.*;
-import com.revature.dtos.requests.NewReimbursementRequest;
+import com.revature.dtos.requests.NewReimbRequest;
 import com.revature.dtos.requests.ReimbUpdateRequest;
 import com.revature.dtos.responses.ReimbursementResponse;
 import com.revature.models.*;
@@ -27,7 +27,7 @@ public class ReimbursementService {
         this.reimbursementStatusDAO = reimbursementStatusDAO;
     }
     // Any new reimbursement
-    public Reimbursement newReimbursement(NewReimbursementRequest reimbursementRequest) throws IOException{
+    public Reimbursement newReimbursement(NewReimbRequest reimbursementRequest) throws IOException{
         Reimbursement newRmb = reimbursementRequest.extractReimb();
 
         newRmb.setAmount(convertAmount(newRmb.getAmount()));
@@ -42,18 +42,9 @@ public class ReimbursementService {
         reimbursementDAO.save(newRmb);
         return newRmb;
     }
-    //User get all method deprecated
-    public List<ReimbursementResponse> getAllUserReimbursements(User authUser){
-        List<Reimbursement> rmb = reimbursementDAO.getAllByID(authUser.getUser_id());
-        List<ReimbursementResponse> rmbResponses = new ArrayList<>();
-        for (Reimbursement thisrmb : rmb){
-            rmbResponses.add(new ReimbursementResponse(thisrmb));
-        }
-        return rmbResponses;
-    }
 
     //Manager only get ALL
-    public List<ReimbursementResponse> getAllReimbursements( ){
+    public List<ReimbursementResponse> getAllReimbs( ){
         List<Reimbursement> rmb = reimbursementDAO.getAll();
         List<ReimbursementResponse> rmbResponses = new ArrayList<>();
         for (Reimbursement thisrmb : rmb){
@@ -63,8 +54,8 @@ public class ReimbursementService {
     }
 
     // Manager get by userID
-    public List<ReimbursementResponse> getUsersReimbursements(String id){
-        List<Reimbursement> rmb = reimbursementDAO.getAllByID(id);
+    public List<ReimbursementResponse> getUserReimbs(String id){
+        List<Reimbursement> rmb = reimbursementDAO.getAllByUserID(id);
         List<ReimbursementResponse> rmbResponses = new ArrayList<>();
         for (Reimbursement thisrmb : rmb){
             rmbResponses.add(new ReimbursementResponse(thisrmb));
@@ -73,8 +64,28 @@ public class ReimbursementService {
     }
 
     // User get single reimbursement
-    public Reimbursement getReimbursementByID(String id){
+    public Reimbursement getReimbsByID(String id){
         return reimbursementDAO.getById(id);
+    }
+
+    // User get reimbursements by status
+    public List<ReimbursementResponse> getReimbsByStatus(String id){
+        List<Reimbursement> rmb = reimbursementDAO.getAllByStatus(id);
+        List<ReimbursementResponse> rmbResponses = new ArrayList<>();
+        for (Reimbursement thisrmb : rmb){
+            rmbResponses.add(new ReimbursementResponse(thisrmb));
+        }
+        return rmbResponses;
+    }
+
+    // User get reimbursements by type
+    public List<ReimbursementResponse> getReimbByType(String id) {
+        List<Reimbursement> rmb = reimbursementDAO.getAllByType(id);
+        List<ReimbursementResponse> rmbResponses = new ArrayList<>();
+        for (Reimbursement thisrmb : rmb) {
+            rmbResponses.add(new ReimbursementResponse(thisrmb));
+        }
+        return rmbResponses;
     }
 
     //Manager Approve/Deny, user edit

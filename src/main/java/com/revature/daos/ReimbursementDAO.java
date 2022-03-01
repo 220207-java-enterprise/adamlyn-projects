@@ -93,7 +93,7 @@ public class ReimbursementDAO implements CrudDAO<Reimbursement>{
     }
 
     // User/Manager access to only 1 ID
-    public ArrayList<Reimbursement> getAllByID(String user_id) {
+    public ArrayList<Reimbursement> getAllByUserID(String user_id) {
         ArrayList<Reimbursement> ReimbursementList = new ArrayList<>();
         Reimbursement userReimbursement = null;
 
