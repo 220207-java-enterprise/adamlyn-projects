@@ -2,9 +2,7 @@ package com.revature.servlets;
 
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.revature.dtos.requests.NewReimbRequest;
-import com.revature.dtos.requests.ReimbRequest;
-import com.revature.dtos.requests.ResourceCreationResponse;
+import com.revature.dtos.requests.*;
 import com.revature.dtos.responses.Principal;
 import com.revature.dtos.responses.ReimbursementResponse;
 import com.revature.models.Reimbursement;
@@ -33,19 +31,46 @@ public class ReimbursementServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        //Only registered users can make new reimbursemsents
+        registerReimb(req, resp);
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
         if (session == null) {
             resp.setStatus(401);
             return;
         }
 
-        registerReimb(req, resp);
-    }
 
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPut(req, resp);
+        try{
+            ReimbUpdateRequest reimbUpdateRequest = mapper.readValue(req.getInputStream(), ReimbUpdateRequest.class);
+
+            if (!reimbUpdateRequest.getStatus_id().equals("PENDING"))
+                throw new InvalidRequestException("User cannot update resolved ticket");
+
+            Principal requester = (Principal) session.getAttribute("authUser");
+            if (requester.getRole().equals("MANAGER")) {
+                reimbUpdateRequest.setResolver_id(requester.getId());
+            }
+            else {
+                reimbUpdateRequest.setAuthor_id((requester.getId()));
+            }
+
+            reimbService.updateRemb(reimbUpdateRequest);
+
+            resp.setStatus(204);
+            resp.setContentType("application/json");
+
+        }catch(InvalidRequestException e){
+            resp.setStatus(405);
+        } catch (Exception e){
+            e.printStackTrace();
+            resp.setStatus(500);
+        }
+
+
+
     }
 
     @Override
@@ -55,6 +80,7 @@ public class ReimbursementServlet extends HttpServlet {
             resp.setStatus(401);
             return;
         }
+
         ReimbRequest reimbRequest = mapper.readValue(req.getInputStream(), ReimbRequest.class);
         Principal requester = (Principal) session.getAttribute("authUser");
         List<ReimbursementResponse> myReimbs;
@@ -86,10 +112,20 @@ public class ReimbursementServlet extends HttpServlet {
 
     protected void registerReimb(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         PrintWriter respWriter = resp.getWriter();
+
+        //Only registered users can make new reimbursemsents
+        HttpSession session = req.getSession(false);
+        if (session == null) {
+            resp.setStatus(401);
+            return;
+        }
+        Principal requester = (Principal) session.getAttribute("authUser");
         try {
 
             NewReimbRequest newReimbRequest = mapper.readValue(req.getInputStream(),
                     NewReimbRequest.class);
+            newReimbRequest.setAuthor_id(requester.getId());
+
             Reimbursement newReimb = reimbService.newReimbursement(newReimbRequest);
 
             resp.setStatus(201);

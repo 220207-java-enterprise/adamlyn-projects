@@ -28,22 +28,26 @@ public class ReimbursementDAO implements CrudDAO<Reimbursement>{
 
     @Override
     public void save(Reimbursement newObject) {
+        System.out.println(newObject +"  WHAT IS GOING ON");
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
             conn.setAutoCommit(false);
-            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO ERS_REIMBURSEMENTS VALUES(?, ?, ?, ?, ?," +
-                    " ?, ?, ?, ?, ?, ?)");
+            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO ERS_REIMBURSEMENTS VALUES(?, ?, " +
+                    "TO_TIMESTAMP(?, 'DD-MM-YYYY HH24:MI:SS'), TO_TIMESTAMP(?, 'DD-MM-YYYY HH24:MI:SS'), ?, null," +
+                    " ?, ?, ?, ?, ?)");
+
             pstmt.setString(1, newObject.getReimb_id());
             pstmt.setFloat(2, newObject.getAmount());
             pstmt.setString(3, newObject.getSubmitted());
             pstmt.setString(4, newObject.getResolved());
             pstmt.setString(5, newObject.getDescription());
-            pstmt.setString(6, newObject.getReceipt());
-            pstmt.setString(7, newObject.getPayment_id());
-            pstmt.setString(8, newObject.getAuthor_id().getUser_id());
-            pstmt.setString(9, newObject.getResolver_id().getUser_id());
-            pstmt.setString(10, newObject.getStatus_id().getStatus_id());
-            pstmt.setString(11, newObject.getType_id().getType_id());
+            //pstmt.setString(6, newObject.getReceipt());
+            pstmt.setString(6, newObject.getPayment_id());
+            pstmt.setString(7, newObject.getAuthor_id().getUser_id());
+            pstmt.setString(8, null);
+            pstmt.setString(9, newObject.getStatus_id().getStatus_id());
+            pstmt.setString(10, newObject.getType_id().getType_id());
 
+            System.out.println(pstmt);
             int rowsInserted = pstmt.executeUpdate();
             if (rowsInserted != 1) {
                 conn.rollback();

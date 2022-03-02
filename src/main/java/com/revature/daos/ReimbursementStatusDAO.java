@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class ReimbursementStatusDAO implements CrudDAO<ReimbursementStatus> {
 
-    private final String rootCall = "SELECT * FROM ERS_REIMBURSEMENT_TYPES";
+    private final String rootCall = "SELECT * FROM ERS_REIMBURSEMENT_STATUSES";
 
     @Override
     public void save(ReimbursementStatus newObject) {

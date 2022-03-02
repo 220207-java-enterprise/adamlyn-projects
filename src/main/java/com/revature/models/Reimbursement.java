@@ -19,11 +19,11 @@ public class Reimbursement {
         super();
     }
 
-    public Reimbursement(Float amount, String description, String receipt, String payment_id) {
+    public Reimbursement(Float amount, String submitted, String description, String receipt) {
         this.amount = amount;
+        this.submitted = submitted;
         this.description = description;
         this.receipt = receipt;
-        this.payment_id = payment_id;
     }
 
 

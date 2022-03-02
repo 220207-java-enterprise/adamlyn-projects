@@ -8,9 +8,11 @@ import com.revature.models.*;
 import com.revature.util.exceptions.InvalidRequestException;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.Date;
 
 public class ReimbursementService {
 
@@ -19,26 +21,36 @@ public class ReimbursementService {
     private ReimbursementStatusDAO reimbursementStatusDAO;
     private UserDAO userDAO;
 
+    String timeStamp = new SimpleDateFormat("MM-dd-yyyy KK:mm:ss").format(new Date());
+
     public ReimbursementService(ReimbursementDAO reimbursementDAO, ReimbursementTypeDAO reimbursementTypeDAO,
                                 ReimbursementStatusDAO reimbursementStatusDAO, UserDAO userDAO){
 
         this.reimbursementDAO = reimbursementDAO;
         this.reimbursementTypeDAO = reimbursementTypeDAO;
         this.reimbursementStatusDAO = reimbursementStatusDAO;
+        this.userDAO = userDAO;
     }
     // Any new reimbursement
-    public Reimbursement newReimbursement(NewReimbRequest reimbursementRequest) throws IOException{
-        Reimbursement newRmb = reimbursementRequest.extractReimb();
+    public Reimbursement newReimbursement(NewReimbRequest reimbRequest) throws IOException{
+        Reimbursement newRmb = reimbRequest.extractReimb();
+        System.out.println(newRmb);
+        System.out.println(reimbRequest);
+        System.out.println(reimbRequest.getAuthor_id());
+        User author = userDAO.getById(reimbRequest.getAuthor_id());
 
-        newRmb.setAmount(convertAmount(newRmb.getAmount()));
+        //newRmb.setAmount(convertAmount(newRmb.getAmount()));
         newRmb.setReimb_id(UUID.randomUUID().toString());
+        newRmb.setSubmitted(timeStamp);
+        newRmb.setAuthor_id(author);
 
 
-        ReimbursementType myType = reimbursementTypeDAO.getById(reimbursementRequest.getType_id());
+        ReimbursementType myType = reimbursementTypeDAO.getById(reimbRequest.getType_id());
         newRmb.setType_id(myType);
         ReimbursementStatus myStatus = reimbursementStatusDAO.getById("1");     // Pending
         newRmb.setStatus_id(myStatus);
 
+        System.out.println(newRmb + " LADIJSDOPASJD");
         reimbursementDAO.save(newRmb);
         return newRmb;
     }
@@ -93,27 +105,32 @@ public class ReimbursementService {
 
         Reimbursement newReimb = reimbursementDAO.getById(reimbUpdate.getReimb_id());
         if (reimbUpdate.getStatus_id().equals("APPROVED") || reimbUpdate.getStatus_id().equals("DENIED"))
-            throw new InvalidRequestException("Cannot remove admin");
+            throw new InvalidRequestException("Cannot edit resolved ticket");
         if (!reimbUpdate.getStatus_id().equals("PENDING") && reimbUpdate.getAuthor_id() != null)
-            throw new InvalidRequestException("Cannot update resolved ticket");
+            throw new InvalidRequestException("User cannot update resolved ticket");
 
         ReimbursementType myType = reimbursementTypeDAO.getById(reimbUpdate.getType_id());
         ReimbursementStatus myStatus = reimbursementStatusDAO.getById(reimbUpdate.getStatus_id());
-        User myAuthor = userDAO.getById(reimbUpdate.getAuthor_id());
+       // User myAuthor = userDAO.getById(reimbUpdate.getAuthor_id());
         User myResolver = userDAO.getById(reimbUpdate.getResolver_id());
 
 
         //Check for any updates then prepare User to be updated
         if(reimbUpdate.getAmount() != null)
             newReimb.setAmount(reimbUpdate.getAmount());
-        if(reimbUpdate.getSubmitted() != null)
+        if(reimbUpdate.getSubmitted() == null && reimbUpdate.getAuthor_id()!= null) {
             newReimb.setSubmitted(reimbUpdate.getSubmitted());
+            newReimb.setSubmitted(timeStamp);
+        }
         if(reimbUpdate.getDescription() != null)
             newReimb.setDescription(reimbUpdate.getDescription());
         if(reimbUpdate.getReceipt() != null)
             newReimb.setReceipt(reimbUpdate.getReceipt());
-        if(reimbUpdate.getResolver_id() != null)
-            newReimb.setResolver_id(userDAO.getById(reimbUpdate.getResolver_id()));
+
+        if(reimbUpdate.getResolver_id() != null) {
+            newReimb.setResolver_id(myResolver);
+            newReimb.setResolved(timeStamp);
+        }
 
         if(reimbUpdate.getType_id() != null )
             newReimb.setType_id(myType);
