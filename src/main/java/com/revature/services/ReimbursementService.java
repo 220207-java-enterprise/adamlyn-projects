@@ -69,9 +69,13 @@ public class ReimbursementService {
     public List<ReimbursementResponse> getUserReimbs(String id){
         List<Reimbursement> rmb = reimbursementDAO.getAllByUserID(id);
         List<ReimbursementResponse> rmbResponses = new ArrayList<>();
+        System.out.println("lol");
         for (Reimbursement thisrmb : rmb){
+            System.out.println(thisrmb);
             rmbResponses.add(new ReimbursementResponse(thisrmb));
+            System.out.println(rmbResponses);
         }
+        System.out.println(rmbResponses);
         return rmbResponses;
     }
 
@@ -83,6 +87,15 @@ public class ReimbursementService {
     // User get reimbursements by status
     public List<ReimbursementResponse> getReimbsByStatus(String id){
         List<Reimbursement> rmb = reimbursementDAO.getAllByStatus(id);
+        List<ReimbursementResponse> rmbResponses = new ArrayList<>();
+        for (Reimbursement thisrmb : rmb){
+            rmbResponses.add(new ReimbursementResponse(thisrmb));
+        }
+        return rmbResponses;
+    }
+    //Manager get all history
+    public List<ReimbursementResponse> getReimbsByHistory(String id){
+        List<Reimbursement> rmb = reimbursementDAO.getAllByHistory(id);
         List<ReimbursementResponse> rmbResponses = new ArrayList<>();
         for (Reimbursement thisrmb : rmb){
             rmbResponses.add(new ReimbursementResponse(thisrmb));
@@ -113,6 +126,9 @@ public class ReimbursementService {
         ReimbursementStatus myStatus = reimbursementStatusDAO.getById(reimbUpdate.getStatus_id());
        // User myAuthor = userDAO.getById(reimbUpdate.getAuthor_id());
         User myResolver = userDAO.getById(reimbUpdate.getResolver_id());
+
+        if(reimbUpdate.getAuthor_id() == myResolver.getUser_id())
+            throw new InvalidRequestException("Cannot look/approve own Reimbursement");
 
 
         //Check for any updates then prepare User to be updated

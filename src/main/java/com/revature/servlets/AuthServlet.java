@@ -42,6 +42,7 @@ public class AuthServlet extends HttpServlet {
             httpSession.setAttribute("authUser", principal);
             resp.setContentType("application/json");
             writer.write(payload);
+            System.out.println(principal);
 
 
         } catch (InvalidRequestException | DatabindException e) {

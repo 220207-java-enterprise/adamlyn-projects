@@ -84,9 +84,12 @@ public class ReimbursementServlet extends HttpServlet {
         ReimbRequest reimbRequest = mapper.readValue(req.getInputStream(), ReimbRequest.class);
         Principal requester = (Principal) session.getAttribute("authUser");
         List<ReimbursementResponse> myReimbs;
+        System.out.println(reimbRequest);
 
         if(requester.getRole().equals("USER") || requester.getRole().equals("ADMIN")) {
+            System.out.println(requester);
             myReimbs = reimbService.getUserReimbs(requester.getId());
+            System.out.println(myReimbs);
         }
         else if (!requester.getRole().equals("MANAGER")) {
             resp.setStatus(403); // FORBIDDEN
@@ -100,6 +103,9 @@ public class ReimbursementServlet extends HttpServlet {
         }
         else if (reimbRequest.getReimb_id() != null) {
             myReimbs = reimbService.getUserReimbs(reimbRequest.getAuthor_id());
+        }
+        else if (reimbRequest.getAuthor_id() != null) {
+            myReimbs = reimbService.getReimbsByHistory(reimbRequest.getAuthor_id());
         }
         else{
             myReimbs = reimbService.getAllReimbs();

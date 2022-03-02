@@ -27,7 +27,8 @@ public class ReimbursementResponse {
         this.receipt = rmb.getReceipt();
         this.payment_id = rmb.getPayment_id();
         this.author_id = rmb.getAuthor_id().getUser_id();
-        this.resolver_id = rmb.getResolver_id().getUser_id();
+        if (rmb.getResolver_id() != null)
+             this.resolver_id = rmb.getResolver_id().getUser_id();
         this.status_id = rmb.getStatus_id().getStatus_id();
         this.type_id = rmb.getType_id().getType_id();
     }
