@@ -36,13 +36,12 @@ public class TestServlet2 {
 
 
             PreparedStatement ostmt = conn.prepareStatement("SELECT rmb.REIMB_ID, rmb.AMOUNT, rmb.SUBMITTED, " +
-                            "rmb.RESOLVED, rmb.DESCRIPTION, rmb.RECEIPT, rmb.PAYMENT_ID, rmb.AUTHOR_ID, rmb.RESOLVER_ID, " +
-                            "rmb.STATUS_ID, rmbs.STATUS, rmb.TYPE_ID,  rmbt.TYPE " +
-                            "FROM ERS_REIMBURSEMENTS rmb " +
-                            "JOIN ERS_REIMBURSEMENT_STATUSES rmbs " +
-                            "ON rmb.STATUS_ID = rmbs.STATUS_ID " +
-                            "JOIN ERS_REIMBURSEMENT_TYPES rmbt " +
-                            "ON rmb.TYPE_ID = rmbt.TYPE_ID WHERE AUTHOR_ID = '1'"
+                            "rmb.RESOLVED, rmb.DESCRIPTION, rmb.RECEIPT, rmb.PAYMENT_ID, rmb.AUTHOR_ID, " +
+                            "rmb.RESOLVER_ID, rmb.STATUS_ID, rmb.TYPE_ID, " +
+                            "rmbs.STATUS, rmbt.TYPE FROM ERS_REIMBURSEMENTS rmb JOIN ERS_REIMBURSEMENT_STATUSES rmbs " +
+                            "ON rmb.STATUS_ID = rmbs.STATUS_ID JOIN ERS_REIMBURSEMENT_TYPES rmbt " +
+                            "ON rmb.TYPE_ID = rmbt.TYPE_ID WHERE AUTHOR_ID = 'c3b1035f-66c7-4f31-a9f0-c29c5cf4ffa8' " +
+                    "AND TYPE_ID = '2'"
             );
 //            ostmt.setString(1, "115c9e07-e5d9-4671-943c-5ae355e2a655");
 //            ostmt.setFloat(2, (float) 156.79);

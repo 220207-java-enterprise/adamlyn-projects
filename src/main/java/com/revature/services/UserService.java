@@ -59,6 +59,7 @@ public class UserService {
         UserRole myRole = userRoleDAO.getById(newUserRequest.getRole());
         newUser.setRole(myRole);
 
+        System.out.println(myRole);
         newUser.setUser_id(UUID.randomUUID().toString());
         newUser.setActive(false);
 
@@ -94,12 +95,11 @@ public class UserService {
 
     // Admin update user status
     public void updateUser(UserUpdateRequest userUpdate) throws IOException {
-
+        System.out.println(userUpdate);
         User newUser = userDAO.getById(userUpdate.getUser_id());
         if (newUser.getRole().getRole().equals("ADMIN"))
             throw new InvalidRequestException("Cannot remove admin");
-        if (userUpdate.getRole().equals("ADMIN"))
-            throw new InvalidRequestException("Cannot promote to admin");
+
         UserRole myRole = userRoleDAO.getById(userUpdate.getRole());
 
         //Check for any updates then prepare User to be updated
@@ -117,6 +117,9 @@ public class UserService {
             newUser.setActive(userUpdate.isActive());
         if(userUpdate.getRole() != null)
             newUser.setRole(myRole);
+
+        if (newUser.getRole().getRole().equals("ADMIN"))
+            throw new InvalidRequestException("Cannot promote to admin");
 
         System.out.println(newUser);
         userDAO.update(newUser);

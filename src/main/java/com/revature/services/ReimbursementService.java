@@ -69,7 +69,29 @@ public class ReimbursementService {
     public List<ReimbursementResponse> getUserReimbs(String id){
         List<Reimbursement> rmb = reimbursementDAO.getAllByUserID(id);
         List<ReimbursementResponse> rmbResponses = new ArrayList<>();
-        System.out.println("lol");
+        System.out.println("lol2");
+        for (Reimbursement thisrmb : rmb){
+            rmbResponses.add(new ReimbursementResponse(thisrmb));
+        }
+        System.out.println(rmbResponses);
+        return rmbResponses;
+    }
+
+    public List<ReimbursementResponse> getUserReimbsByStatus(String id, String status_id){
+        List<Reimbursement> rmb = reimbursementDAO.userGetAllByIDType(id, status_id);
+        List<ReimbursementResponse> rmbResponses = new ArrayList<>();
+        for (Reimbursement thisrmb : rmb){
+            rmbResponses.add(new ReimbursementResponse(thisrmb));
+        }
+        System.out.println(rmbResponses);
+        return rmbResponses;
+    }
+
+    public List<ReimbursementResponse> getUserReimbsByType(String id, String type_id){
+        System.out.println(id + " " +type_id);
+        List<Reimbursement> rmb = reimbursementDAO.userGetAllByIDType(id, type_id);
+        List<ReimbursementResponse> rmbResponses = new ArrayList<>();
+        System.out.println("lol1");
         for (Reimbursement thisrmb : rmb){
             System.out.println(thisrmb);
             rmbResponses.add(new ReimbursementResponse(thisrmb));

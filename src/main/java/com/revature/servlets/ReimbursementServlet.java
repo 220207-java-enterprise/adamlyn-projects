@@ -84,12 +84,20 @@ public class ReimbursementServlet extends HttpServlet {
         ReimbRequest reimbRequest = mapper.readValue(req.getInputStream(), ReimbRequest.class);
         Principal requester = (Principal) session.getAttribute("authUser");
         List<ReimbursementResponse> myReimbs;
-        System.out.println(reimbRequest);
 
         if(requester.getRole().equals("USER") || requester.getRole().equals("ADMIN")) {
-            System.out.println(requester);
-            myReimbs = reimbService.getUserReimbs(requester.getId());
-            System.out.println(myReimbs);
+            System.out.println("NOT A MANAGER");
+            if(reimbRequest.getStatus_id() != null){
+                System.out.println("STATUS");
+                myReimbs = reimbService.getUserReimbsByStatus(requester.getId(),reimbRequest.getStatus_id());
+            }
+            else if (reimbRequest.getType_id() != null){
+                System.out.println("TYPE");
+                myReimbs = reimbService.getUserReimbsByType(requester.getId(), reimbRequest.getType_id());
+            }else {
+                System.out.println("ELSE");
+                myReimbs = reimbService.getUserReimbs(requester.getId());
+            }
         }
         else if (!requester.getRole().equals("MANAGER")) {
             resp.setStatus(403); // FORBIDDEN
@@ -102,6 +110,7 @@ public class ReimbursementServlet extends HttpServlet {
             myReimbs = reimbService.getReimbByType(reimbRequest.getType_id());
         }
         else if (reimbRequest.getReimb_id() != null) {
+            System.out.println("MANAGER getall");
             myReimbs = reimbService.getUserReimbs(reimbRequest.getAuthor_id());
         }
         else if (reimbRequest.getAuthor_id() != null) {
