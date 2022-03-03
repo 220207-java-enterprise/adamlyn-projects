@@ -23,6 +23,7 @@ public class UserService {
     private UserDAO userDAO;
     private UserRoleDAO userRoleDAO;
 
+
     public UserService(UserDAO userDAO, UserRoleDAO userRoleDAO){
         this.userDAO = userDAO;
         this.userRoleDAO = userRoleDAO;

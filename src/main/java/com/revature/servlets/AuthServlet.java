@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.dtos.requests.LoginRequest;
 import com.revature.dtos.responses.Principal;
+import com.revature.services.TokenService;
 import com.revature.services.UserService;
 import com.revature.util.exceptions.AuthenticationException;
 import com.revature.util.exceptions.ForbiddenException;
@@ -19,12 +20,14 @@ import java.io.PrintWriter;
 
 public class AuthServlet extends HttpServlet {
 
+    private final TokenService tokenService;
     private final UserService userService;
     private final ObjectMapper mapper;
 
-    public AuthServlet(UserService userService, ObjectMapper mapper) {
+    public AuthServlet(UserService userService, ObjectMapper mapper, TokenService tokenService) {
         this.userService = userService;
         this.mapper = mapper;
+        this.tokenService = tokenService;
     }
 
     @Override
@@ -37,12 +40,17 @@ public class AuthServlet extends HttpServlet {
             Principal principal = new Principal(userService.login(loginRequest));
             String payload = mapper.writeValueAsString(principal);
 
-            // Stateful session management
-            HttpSession httpSession = req.getSession();
-            httpSession.setAttribute("authUser", principal);
+
+            String token = tokenService.generateToken(principal);
+            resp.setHeader("Authorization", token);
             resp.setContentType("application/json");
             writer.write(payload);
-            System.out.println(principal);
+//            // Stateful session management
+//            HttpSession httpSession = req.getSession();
+//            httpSession.setAttribute("authUser", principal);
+//            resp.setContentType("application/json");
+//            writer.write(payload);
+//            System.out.println(principal);
 
 
         } catch (InvalidRequestException | DatabindException e) {

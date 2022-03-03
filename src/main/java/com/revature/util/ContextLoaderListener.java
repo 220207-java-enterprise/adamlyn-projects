@@ -3,10 +3,12 @@ package com.revature.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.daos.*;
 import com.revature.services.ReimbursementService;
+import com.revature.services.TokenService;
 import com.revature.services.UserService;
 import com.revature.servlets.*;
 import com.revature.servlets.AuthServlet;
 import com.revature.servlets.UserServlet;
+import jdk.nashorn.internal.parser.Token;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -19,7 +21,7 @@ public class ContextLoaderListener implements ServletContextListener {
         System.out.println("Initializing Foundations web application");
 
         ObjectMapper mapper = new ObjectMapper();
-
+        JwtConfig jwtConfig = new JwtConfig();
 
         UserDAO userDAO = new UserDAO();
         UserRoleDAO userRoleDAO = new UserRoleDAO();
@@ -28,12 +30,13 @@ public class ContextLoaderListener implements ServletContextListener {
         ReimbursementTypeDAO reimbTypeDAO = new ReimbursementTypeDAO();
         ReimbursementStatusDAO reimbStatusDAO = new ReimbursementStatusDAO();
 
+        TokenService tokenService = new TokenService(jwtConfig);
         UserService userService = new UserService(userDAO, userRoleDAO);
         ReimbursementService reimbService = new ReimbursementService(reimbDAO,
                 reimbTypeDAO,reimbStatusDAO, userDAO);
         TestServlet testServlet = new TestServlet(userService, mapper);
-        UserServlet userServlet = new UserServlet(userService, mapper);
-        AuthServlet authServlet = new AuthServlet(userService, mapper);
+        UserServlet userServlet = new UserServlet(userService, mapper, tokenService);
+        AuthServlet authServlet = new AuthServlet(userService, mapper, tokenService);
         ReimbursementServlet reimbursementServlet = new ReimbursementServlet(reimbService, mapper);
 
         // Programmatic Servlet Registration

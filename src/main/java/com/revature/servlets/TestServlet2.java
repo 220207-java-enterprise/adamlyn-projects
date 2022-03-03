@@ -10,11 +10,14 @@ import com.revature.models.User;
 import com.revature.util.ConnectionFactory;
 
 import javax.xml.transform.Result;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 
 public class TestServlet2 {
@@ -83,19 +86,17 @@ public class TestServlet2 {
 
                 reimbList.add(userReimbursement);
             }
-            System.out.println(reimbList);
-            System.out.println(" TIMESTAMP" +rs.getTime(timeStamp));
-            List<ReimbursementResponse> rmbResponses = new ArrayList<>();
-            System.out.println("lol");
-            for (Reimbursement thisrmb : reimbList){
-                System.out.println(thisrmb);
-                rmbResponses.add(new ReimbursementResponse(thisrmb));
-                System.out.println(rmbResponses);
+
+            Properties myprops = new Properties();
+            try {
+                myprops.load(new FileReader("src/main/resources/application.properties"));
+            }catch (IOException e){
+                e.printStackTrace();
             }
-            System.out.println(rmbResponses);
 
 
-
+            String salt = myprops.getProperty("db-salty-byte");
+            System.out.println(salt);
 
 
 

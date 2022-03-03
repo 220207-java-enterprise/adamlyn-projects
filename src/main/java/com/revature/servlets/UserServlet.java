@@ -8,10 +8,12 @@ import com.revature.dtos.requests.ResourceCreationResponse;
 import com.revature.dtos.responses.Principal;
 import com.revature.dtos.responses.UserResponse;
 import com.revature.models.User;
+import com.revature.services.TokenService;
 import com.revature.services.UserService;
 import com.revature.util.exceptions.ForbiddenException;
 import com.revature.util.exceptions.InvalidRequestException;
 import com.revature.util.exceptions.ResourceConflictException;
+import jdk.nashorn.internal.parser.Token;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -27,22 +29,25 @@ public class UserServlet extends HttpServlet {
 
     private final UserService userService;
     private final ObjectMapper mapper;
+    private final TokenService tokenService;
 
-    public UserServlet(UserService userService, ObjectMapper mapper) {
+    public UserServlet(UserService userService, ObjectMapper mapper, TokenService tokenService) {
         this.userService = userService;
         this.mapper = mapper;
+        this.tokenService = tokenService;
     }
 
     // Admin get all users
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
-        if (session == null) {
-            resp.setStatus(401);
-            return;
-        }
 
-        Principal requester = (Principal) session.getAttribute("authUser");
+//        HttpSession session = req.getSession(false);
+//        if (session == null) {
+//            resp.setStatus(401);
+//            return;
+//        }
+//        Principal requester = (Principal) session.getAttribute("authUser");
+        Principal requester = tokenService.extractRequesterDetails(req.getHeader("Authorization"));
         if (!requester.getRole().equals("ADMIN")) {
             resp.setStatus(403); // FORBIDDEN
             return;
