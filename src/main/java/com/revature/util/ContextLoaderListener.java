@@ -37,7 +37,7 @@ public class ContextLoaderListener implements ServletContextListener {
         TestServlet testServlet = new TestServlet(userService, mapper);
         UserServlet userServlet = new UserServlet(userService, mapper, tokenService);
         AuthServlet authServlet = new AuthServlet(userService, mapper, tokenService);
-        ReimbursementServlet reimbursementServlet = new ReimbursementServlet(reimbService, mapper);
+        ReimbursementServlet reimbursementServlet = new ReimbursementServlet(reimbService, mapper, tokenService);
 
         // Programmatic Servlet Registration
         ServletContext context = sce.getServletContext();

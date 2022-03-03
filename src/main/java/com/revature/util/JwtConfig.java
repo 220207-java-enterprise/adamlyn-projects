@@ -21,12 +21,11 @@ public class JwtConfig {
     public JwtConfig(){
 
         try {
-            myprops.load(new FileReader("src/main/resources/application.properties"));
+            this.myprops.load(new FileReader("src/main/resources/application.properties"));
         }catch (IOException e){
             e.printStackTrace();
         }
         this.salt = myprops.getProperty("db-salty-byte");
-        System.out.println("SALT: " + salt);
 
         byte[] saltyBytes = DatatypeConverter.parseBase64Binary(salt);
         signingKey = new SecretKeySpec(saltyBytes, sigAlg.getJcaName());

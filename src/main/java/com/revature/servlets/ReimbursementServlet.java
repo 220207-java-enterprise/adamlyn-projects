@@ -7,6 +7,7 @@ import com.revature.dtos.responses.Principal;
 import com.revature.dtos.responses.ReimbursementResponse;
 import com.revature.models.Reimbursement;
 import com.revature.services.ReimbursementService;
+import com.revature.services.TokenService;
 import com.revature.util.exceptions.InvalidRequestException;
 import com.revature.util.exceptions.ResourceConflictException;
 
@@ -22,10 +23,12 @@ import java.util.List;
 public class ReimbursementServlet extends HttpServlet {
     private final ReimbursementService reimbService;
     private final ObjectMapper mapper;
+    private final TokenService tokenService;
 
-    public ReimbursementServlet(ReimbursementService reimbService, ObjectMapper mapper) {
+    public ReimbursementServlet(ReimbursementService reimbService, ObjectMapper mapper, TokenService tokenService) {
         this.reimbService = reimbService;
         this.mapper = mapper;
+        this.tokenService = tokenService;
     }
 
     @Override
@@ -36,17 +39,15 @@ public class ReimbursementServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
-        if (session == null) {
+        Principal requester = tokenService.extractRequesterDetails(req.getHeader("Authorization"));
+        if (requester == null) {
             resp.setStatus(401);
             return;
         }
 
-
         try{
             ReimbUpdateRequest reimbUpdateRequest = mapper.readValue(req.getInputStream(), ReimbUpdateRequest.class);
 
-            Principal requester = (Principal) session.getAttribute("authUser");
             if (requester.getRole().equals("MANAGER")) {
                 reimbUpdateRequest.setResolver_id(requester.getId());
             }
@@ -66,20 +67,17 @@ public class ReimbursementServlet extends HttpServlet {
             resp.setStatus(500);
         }
 
-
-
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
-        if (session == null) {
+        Principal requester = tokenService.extractRequesterDetails(req.getHeader("Authorization"));
+        if (requester == null) {
             resp.setStatus(401);
             return;
         }
 
         ReimbRequest reimbRequest = mapper.readValue(req.getInputStream(), ReimbRequest.class);
-        Principal requester = (Principal) session.getAttribute("authUser");
         List<ReimbursementResponse> myReimbs;
 
         if(requester.getRole().equals("USER") || requester.getRole().equals("ADMIN")) {
@@ -126,12 +124,11 @@ public class ReimbursementServlet extends HttpServlet {
         PrintWriter respWriter = resp.getWriter();
 
         //Only registered users can make new reimbursemsents
-        HttpSession session = req.getSession(false);
-        if (session == null) {
+        Principal requester = tokenService.extractRequesterDetails(req.getHeader("Authorization"));
+        if (requester == null) {
             resp.setStatus(401);
             return;
         }
-        Principal requester = (Principal) session.getAttribute("authUser");
         try {
 
             NewReimbRequest newReimbRequest = mapper.readValue(req.getInputStream(),

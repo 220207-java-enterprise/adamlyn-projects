@@ -34,9 +34,6 @@ public class ReimbursementService {
     // Any new reimbursement
     public Reimbursement newReimbursement(NewReimbRequest reimbRequest) throws IOException{
         Reimbursement newRmb = reimbRequest.extractReimb();
-        System.out.println(newRmb);
-        System.out.println(reimbRequest);
-        System.out.println(reimbRequest.getAuthor_id());
         User author = userDAO.getById(reimbRequest.getAuthor_id());
 
         //newRmb.setAmount(convertAmount(newRmb.getAmount()));
@@ -50,7 +47,6 @@ public class ReimbursementService {
         ReimbursementStatus myStatus = reimbursementStatusDAO.getById("1");     // Pending
         newRmb.setStatus_id(myStatus);
 
-        System.out.println(newRmb + " LADIJSDOPASJD");
         reimbursementDAO.save(newRmb);
         return newRmb;
     }

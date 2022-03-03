@@ -48,6 +48,12 @@ public class UserServlet extends HttpServlet {
 //        }
 //        Principal requester = (Principal) session.getAttribute("authUser");
         Principal requester = tokenService.extractRequesterDetails(req.getHeader("Authorization"));
+        System.out.println(requester);
+        if (requester == null) {
+            resp.setStatus(401);
+            return;
+        }
+
         if (!requester.getRole().equals("ADMIN")) {
             resp.setStatus(403); // FORBIDDEN
             return;
@@ -68,36 +74,30 @@ public class UserServlet extends HttpServlet {
     // Admin only update/approve/soft delete user
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
-        if (session == null) {
+        Principal requester = tokenService.extractRequesterDetails(req.getHeader("Authorization"));
+        if (requester == null) {
             resp.setStatus(401);
             return;
         }
-
-        Principal requester = (Principal) session.getAttribute("authUser");
         if (!requester.getRole().equals("ADMIN")) {
             resp.setStatus(403); // FORBIDDEN
             return;
         }
-
         updateUser(req, resp);
     }
 
     // Admin only update/approve/soft delete user
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
-        if (session == null) {
+        Principal requester = tokenService.extractRequesterDetails(req.getHeader("Authorization"));
+        if (requester == null) {
             resp.setStatus(401);
             return;
         }
-
-        Principal requester = (Principal) session.getAttribute("authUser");
         if (!requester.getRole().equals("ADMIN")) {
             resp.setStatus(403); // FORBIDDEN
             return;
         }
-
         deleteUser(req, resp);
     }
 
