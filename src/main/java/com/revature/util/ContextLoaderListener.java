@@ -5,10 +5,10 @@ import com.revature.daos.*;
 import com.revature.services.ReimbursementService;
 import com.revature.services.TokenService;
 import com.revature.services.UserService;
-import com.revature.servlets.*;
 import com.revature.servlets.AuthServlet;
+import com.revature.servlets.ReimbursementServlet;
+import com.revature.servlets.TestServlet;
 import com.revature.servlets.UserServlet;
-import jdk.nashorn.internal.parser.Token;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -16,6 +16,7 @@ import javax.servlet.ServletContextListener;
 
 public class ContextLoaderListener implements ServletContextListener {
 
+    //todo password security > unit testing > loggers
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         System.out.println("Initializing Foundations web application");

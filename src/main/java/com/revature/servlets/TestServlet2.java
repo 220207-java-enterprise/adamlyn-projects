@@ -8,6 +8,7 @@ import com.revature.models.ReimbursementStatus;
 import com.revature.models.ReimbursementType;
 import com.revature.models.User;
 import com.revature.util.ConnectionFactory;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.xml.transform.Result;
 import java.io.FileReader;
@@ -111,8 +112,22 @@ public class TestServlet2 {
             System.out.println("Success");
         }
 
+        String astring = "Hello";
+        String bstring = "hello";
 
+        System.out.println(astring + " " + BCrypt.hashpw(astring, BCrypt.gensalt(10)));
+        System.out.println(astring + " " + BCrypt.hashpw(astring, BCrypt.gensalt(10)));
+        String ahash = BCrypt.hashpw(astring, BCrypt.gensalt(10));
+        String a2hash= BCrypt.hashpw(astring, BCrypt.gensalt(10));
 
+        System.out.println("AHASSHSTRING: " + BCrypt.checkpw(ahash, a2hash));
+
+        System.out.println(bstring + " " + BCrypt.hashpw(astring, BCrypt.gensalt(10)));
+        BCrypt.hashpw(bstring, BCrypt.gensalt(10));
+
+        BCrypt.checkpw(astring, BCrypt.hashpw(astring, BCrypt.gensalt(10)));
+        System.out.println("ASTRING: " + BCrypt.checkpw(astring, BCrypt.hashpw(astring, BCrypt.gensalt(10))));
+        System.out.println("BSTRING: " + BCrypt.checkpw(bstring, BCrypt.hashpw(bstring, BCrypt.gensalt(10))));
 
     }
 }

@@ -21,7 +21,9 @@ public class JwtConfig {
     public JwtConfig(){
 
         try {
-            this.myprops.load(new FileReader("src/main/resources/application.properties"));
+            //this.myprops.load(new FileReader("src/main/resources/application.properties"));
+            this.myprops.load(Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream("application.properties"));
         }catch (IOException e){
             e.printStackTrace();
         }

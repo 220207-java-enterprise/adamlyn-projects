@@ -12,6 +12,7 @@ import com.revature.util.exceptions.AuthenticationException;
 import com.revature.util.exceptions.ForbiddenException;
 import com.revature.util.exceptions.InvalidRequestException;
 import com.revature.util.exceptions.ResourceConflictException;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -63,6 +64,7 @@ public class UserService {
         System.out.println(myRole);
         newUser.setUser_id(UUID.randomUUID().toString());
         newUser.setActive(false);
+        newUser.setPassword(BCrypt.hashpw(newUserRequest.getPassword(), BCrypt.gensalt(10)));
 
         userDAO.save(newUser);
 
@@ -83,6 +85,7 @@ public class UserService {
 
         User authUser = userDAO.getByUsernameandPassword(username, password);
 
+        BCrypt.checkpw(password, authUser.getPassword());
         // Check for if user exists then check if user is active
         if (authUser == null) {
             throw new AuthenticationException();

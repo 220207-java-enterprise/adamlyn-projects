@@ -42,6 +42,8 @@ public class ReimbursementService {
         newRmb.setAuthor_id(author);
 
 
+        if(reimbRequest.getType_id() == null)
+            reimbRequest.setType_id("4");                                               // defaults to other
         ReimbursementType myType = reimbursementTypeDAO.getById(reimbRequest.getType_id());
         newRmb.setType_id(myType);
         ReimbursementStatus myStatus = reimbursementStatusDAO.getById("1");     // Pending

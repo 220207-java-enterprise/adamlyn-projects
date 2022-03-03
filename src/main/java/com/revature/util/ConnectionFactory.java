@@ -23,7 +23,10 @@ public class ConnectionFactory {
 
     private ConnectionFactory() {
         try {
-            myprops.load(new FileReader("src/main/resources/application.properties"));
+            //myprops.load(new FileReader("src/main/resources/application.properties"));
+            myprops.load(Thread.currentThread()
+                    .getContextClassLoader()
+                    .getResourceAsStream("application.properties"));
         } catch (IOException e) {
             e.printStackTrace();
         }
