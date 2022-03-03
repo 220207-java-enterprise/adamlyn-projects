@@ -21,7 +21,7 @@ public class ReimbursementService {
     private ReimbursementStatusDAO reimbursementStatusDAO;
     private UserDAO userDAO;
 
-    String timeStamp = new SimpleDateFormat("MM-dd-yyyy KK:mm:ss").format(new Date());
+    String timeStamp = new SimpleDateFormat("yyyy-MM-dd KK:mm:ss").format(new Date());
 
     public ReimbursementService(ReimbursementDAO reimbursementDAO, ReimbursementTypeDAO reimbursementTypeDAO,
                                 ReimbursementStatusDAO reimbursementStatusDAO, UserDAO userDAO){
@@ -78,7 +78,7 @@ public class ReimbursementService {
     }
 
     public List<ReimbursementResponse> getUserReimbsByStatus(String id, String status_id){
-        List<Reimbursement> rmb = reimbursementDAO.userGetAllByIDType(id, status_id);
+        List<Reimbursement> rmb = reimbursementDAO.userGetAllByIDStatus(id, status_id);
         List<ReimbursementResponse> rmbResponses = new ArrayList<>();
         for (Reimbursement thisrmb : rmb){
             rmbResponses.add(new ReimbursementResponse(thisrmb));
@@ -136,22 +136,27 @@ public class ReimbursementService {
     }
 
     //Manager Approve/Deny, user edit
-    public void updateRemb(ReimbUpdateRequest reimbUpdate){
+    public void updateReimb(ReimbUpdateRequest reimbUpdate){
 
         Reimbursement newReimb = reimbursementDAO.getById(reimbUpdate.getReimb_id());
-        if (reimbUpdate.getStatus_id().equals("APPROVED") || reimbUpdate.getStatus_id().equals("DENIED"))
-            throw new InvalidRequestException("Cannot edit resolved ticket");
-        if (!reimbUpdate.getStatus_id().equals("PENDING") && reimbUpdate.getAuthor_id() != null)
-            throw new InvalidRequestException("User cannot update resolved ticket");
+        ReimbursementStatus newStatus = reimbursementStatusDAO.getById(reimbUpdate.getStatus_id());
 
+        if (newReimb.getStatus_id().getStatus().equals("APPROVED") ||
+            newReimb.getStatus_id().getStatus().equals("DENIED")) {
+            throw new InvalidRequestException("Cannot edit resolved ticket");
+        }
+        if (!newStatus.getStatus().equals("PENDING") && reimbUpdate.getAuthor_id() != null) {
+            throw new InvalidRequestException("User cannot update resolved ticket");
+        }
         ReimbursementType myType = reimbursementTypeDAO.getById(reimbUpdate.getType_id());
         ReimbursementStatus myStatus = reimbursementStatusDAO.getById(reimbUpdate.getStatus_id());
        // User myAuthor = userDAO.getById(reimbUpdate.getAuthor_id());
         User myResolver = userDAO.getById(reimbUpdate.getResolver_id());
 
-        if(reimbUpdate.getAuthor_id() == myResolver.getUser_id())
+        System.out.println(newReimb);
+        System.out.println(reimbUpdate);
+        if(newReimb.getAuthor_id().getUser_id().equals(reimbUpdate.getResolver_id()))
             throw new InvalidRequestException("Cannot look/approve own Reimbursement");
-
 
         //Check for any updates then prepare User to be updated
         if(reimbUpdate.getAmount() != null)

@@ -97,6 +97,7 @@ public class UserService {
     public void updateUser(UserUpdateRequest userUpdate) throws IOException {
         System.out.println(userUpdate);
         User newUser = userDAO.getById(userUpdate.getUser_id());
+        System.out.println(newUser+ " dasad");
         if (newUser.getRole().getRole().equals("ADMIN"))
             throw new InvalidRequestException("Cannot remove admin");
 

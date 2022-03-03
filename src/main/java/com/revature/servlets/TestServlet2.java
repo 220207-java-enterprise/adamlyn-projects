@@ -11,7 +11,9 @@ import com.revature.util.ConnectionFactory;
 
 import javax.xml.transform.Result;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -25,6 +27,7 @@ public class TestServlet2 {
 
         Connection conn = null;
 
+
         UserDAO userDAO = new UserDAO();
         ReimbursementDAO reimbursementDAO = new ReimbursementDAO();
         try {
@@ -35,13 +38,16 @@ public class TestServlet2 {
             System.out.println("PSTMT: " + pstmt);
 
 
+            String timeStamp = new SimpleDateFormat("MM-dd-yyyy KK:mm:ss").format(new Date());
+            System.out.println(timeStamp);
+
             PreparedStatement ostmt = conn.prepareStatement("SELECT rmb.REIMB_ID, rmb.AMOUNT, rmb.SUBMITTED, " +
                             "rmb.RESOLVED, rmb.DESCRIPTION, rmb.RECEIPT, rmb.PAYMENT_ID, rmb.AUTHOR_ID, " +
                             "rmb.RESOLVER_ID, rmb.STATUS_ID, rmb.TYPE_ID, " +
                             "rmbs.STATUS, rmbt.TYPE FROM ERS_REIMBURSEMENTS rmb JOIN ERS_REIMBURSEMENT_STATUSES rmbs " +
                             "ON rmb.STATUS_ID = rmbs.STATUS_ID JOIN ERS_REIMBURSEMENT_TYPES rmbt " +
                             "ON rmb.TYPE_ID = rmbt.TYPE_ID WHERE AUTHOR_ID = 'c3b1035f-66c7-4f31-a9f0-c29c5cf4ffa8' " +
-                    "AND TYPE_ID = '2'"
+                    "AND rmb.TYPE_ID = '2'"
             );
 //            ostmt.setString(1, "115c9e07-e5d9-4671-943c-5ae355e2a655");
 //            ostmt.setFloat(2, (float) 156.79);
@@ -78,7 +84,7 @@ public class TestServlet2 {
                 reimbList.add(userReimbursement);
             }
             System.out.println(reimbList);
-
+            System.out.println(" TIMESTAMP" +rs.getTime(timeStamp));
             List<ReimbursementResponse> rmbResponses = new ArrayList<>();
             System.out.println("lol");
             for (Reimbursement thisrmb : reimbList){

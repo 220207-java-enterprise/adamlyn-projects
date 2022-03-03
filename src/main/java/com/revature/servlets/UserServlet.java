@@ -54,7 +54,7 @@ public class UserServlet extends HttpServlet {
         resp.getWriter().write(payload);
     }
 
-    //Anyone register new user/manager
+    //Anyone can register new user/manager
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         register(req, resp);

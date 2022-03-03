@@ -21,11 +21,11 @@ public class ReimbursementStatusDAO implements CrudDAO<ReimbursementStatus> {
     }
 
     @Override
-    public ReimbursementStatus getById(String status) {
+    public ReimbursementStatus getById(String status_id) {
         ReimbursementStatus myStatus = null;
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
             PreparedStatement pstmt = conn.prepareStatement(rootCall + " WHERE STATUS_ID = ?");
-            pstmt.setString(1, status);
+            pstmt.setString(1, status_id);
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {

@@ -46,9 +46,6 @@ public class ReimbursementServlet extends HttpServlet {
         try{
             ReimbUpdateRequest reimbUpdateRequest = mapper.readValue(req.getInputStream(), ReimbUpdateRequest.class);
 
-            if (!reimbUpdateRequest.getStatus_id().equals("PENDING"))
-                throw new InvalidRequestException("User cannot update resolved ticket");
-
             Principal requester = (Principal) session.getAttribute("authUser");
             if (requester.getRole().equals("MANAGER")) {
                 reimbUpdateRequest.setResolver_id(requester.getId());
@@ -57,7 +54,7 @@ public class ReimbursementServlet extends HttpServlet {
                 reimbUpdateRequest.setAuthor_id((requester.getId()));
             }
 
-            reimbService.updateRemb(reimbUpdateRequest);
+            reimbService.updateReimb(reimbUpdateRequest);
 
             resp.setStatus(204);
             resp.setContentType("application/json");
