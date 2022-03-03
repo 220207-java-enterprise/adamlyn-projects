@@ -72,11 +72,29 @@ public class UserServlet extends HttpServlet {
         Principal requester = (Principal) session.getAttribute("authUser");
         if (!requester.getRole().equals("ADMIN")) {
             resp.setStatus(403); // FORBIDDEN
+            return;
         }
 
         updateUser(req, resp);
     }
 
+    // Admin only update/approve/soft delete user
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession(false);
+        if (session == null) {
+            resp.setStatus(401);
+            return;
+        }
+
+        Principal requester = (Principal) session.getAttribute("authUser");
+        if (!requester.getRole().equals("ADMIN")) {
+            resp.setStatus(403); // FORBIDDEN
+            return;
+        }
+
+        deleteUser(req, resp);
+    }
 
     protected void updateUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         try{
@@ -94,6 +112,24 @@ public class UserServlet extends HttpServlet {
             resp.setStatus(500);
         }
 
+    }
+
+    protected void deleteUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            UserUpdateRequest updateUser = mapper.readValue(req.getInputStream(), UserUpdateRequest.class);
+            updateUser.setActive(false);
+
+            userService.updateUser(updateUser);
+
+            resp.setStatus(204);
+            resp.setContentType("application/json");
+
+        } catch (InvalidRequestException e) {
+            resp.setStatus(405);
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.setStatus(500);
+        }
     }
 
     // User can register as manager or user
