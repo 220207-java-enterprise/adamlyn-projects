@@ -83,9 +83,11 @@ public class UserService {
 
         // TODO encrypt provided password (assumes password encryption is in place) to see if it matches what is in the DB
 
-        User authUser = userDAO.getByUsernameandPassword(username, password);
+        User authUser = userDAO.getByUsername(username);
 
-        BCrypt.checkpw(password, authUser.getPassword());
+        if(!BCrypt.checkpw(password, authUser.getPassword()))
+            throw new AuthenticationException();
+
         // Check for if user exists then check if user is active
         if (authUser == null) {
             throw new AuthenticationException();
@@ -104,6 +106,7 @@ public class UserService {
         if (newUser.getRole().getRole().equals("ADMIN"))
             throw new InvalidRequestException("Cannot remove admin");
 
+        newUser.setPassword(BCrypt.hashpw(userUpdate.getPassword(), BCrypt.gensalt(10)));
         UserRole myRole = userRoleDAO.getById(userUpdate.getRole());
 
         //Check for any updates then prepare User to be updated

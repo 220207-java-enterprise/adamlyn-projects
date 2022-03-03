@@ -112,7 +112,7 @@ public class TestServlet2 {
             System.out.println("Success");
         }
 
-        String astring = "Hello";
+        String astring = "p4$$Word";
         String bstring = "hello";
 
         System.out.println(astring + " " + BCrypt.hashpw(astring, BCrypt.gensalt(10)));
@@ -122,7 +122,7 @@ public class TestServlet2 {
 
         System.out.println("AHASSHSTRING: " + BCrypt.checkpw(ahash, a2hash));
 
-        System.out.println(bstring + " " + BCrypt.hashpw(astring, BCrypt.gensalt(10)));
+        System.out.println(astring + " " + BCrypt.hashpw(astring, BCrypt.gensalt(10)));
         BCrypt.hashpw(bstring, BCrypt.gensalt(10));
 
         BCrypt.checkpw(astring, BCrypt.hashpw(astring, BCrypt.gensalt(10)));
