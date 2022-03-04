@@ -9,6 +9,8 @@ import com.revature.services.UserService;
 import com.revature.util.exceptions.AuthenticationException;
 import com.revature.util.exceptions.ForbiddenException;
 import com.revature.util.exceptions.InvalidRequestException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,12 +19,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 public class AuthServlet extends HttpServlet {
 
     private final TokenService tokenService;
     private final UserService userService;
     private final ObjectMapper mapper;
+
+    private static Logger logger = LogManager.getLogger(AuthServlet.class);
 
     public AuthServlet(UserService userService, ObjectMapper mapper, TokenService tokenService) {
         this.userService = userService;
@@ -32,17 +37,20 @@ public class AuthServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        logger.debug("AuthServlet #doPost invoked with args: " + Arrays.asList(req, resp));
         PrintWriter writer = resp.getWriter();
 
         try {
 
             LoginRequest loginRequest = mapper.readValue(req.getInputStream(), LoginRequest.class);
+            logger.debug("UserServlet #doget created object: " + loginRequest);
             Principal principal = new Principal(userService.login(loginRequest));
+            logger.debug("UserServlet #doget created object: " + principal);
             String payload = mapper.writeValueAsString(principal);
-
-
-            System.out.println(principal);
+            logger.debug("UserServlet #doget created Token object");
             String token = tokenService.generateToken(principal);
+
+            logger.debug("UserServlet #doPost returned successfully");
             resp.setHeader("Authorization", token);
             resp.setContentType("application/json");
             writer.write(payload);
@@ -61,6 +69,7 @@ public class AuthServlet extends HttpServlet {
         } catch (AuthenticationException e) {
             resp.setStatus(401); // UNAUTHORIZED (no user found with provided credentials)
         }catch (ForbiddenException e) {
+            logger.warn("Unauthorized request made by user: " + 
             resp.setStatus(403); // Forbidden (user isn't allowed to login to an inactive account)
         } catch (Exception e) {
             e.printStackTrace();

@@ -9,6 +9,8 @@ import com.revature.servlets.AuthServlet;
 import com.revature.servlets.ReimbursementServlet;
 import com.revature.servlets.TestServlet;
 import com.revature.servlets.UserServlet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -17,9 +19,11 @@ import javax.servlet.ServletContextListener;
 public class ContextLoaderListener implements ServletContextListener {
 
     //todo password security > unit testing > loggers
+    private static Logger logger = LogManager.getLogger(ContextLoaderListener.class);
+
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        System.out.println("Initializing Foundations web application");
+        logger.debug("Initializing Foundations web application");
 
         ObjectMapper mapper = new ObjectMapper();
         JwtConfig jwtConfig = new JwtConfig();
@@ -31,10 +35,13 @@ public class ContextLoaderListener implements ServletContextListener {
         ReimbursementTypeDAO reimbTypeDAO = new ReimbursementTypeDAO();
         ReimbursementStatusDAO reimbStatusDAO = new ReimbursementStatusDAO();
 
+
         TokenService tokenService = new TokenService(jwtConfig);
         UserService userService = new UserService(userDAO, userRoleDAO);
         ReimbursementService reimbService = new ReimbursementService(reimbDAO,
                 reimbTypeDAO,reimbStatusDAO, userDAO);
+
+
         TestServlet testServlet = new TestServlet(userService, mapper);
         UserServlet userServlet = new UserServlet(userService, mapper, tokenService);
         AuthServlet authServlet = new AuthServlet(userService, mapper, tokenService);
@@ -52,7 +59,7 @@ public class ContextLoaderListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        System.out.println("Shutting down Foundations web application");
+        logger.debug("Shutting down Foundations web application");
     }
 
 }

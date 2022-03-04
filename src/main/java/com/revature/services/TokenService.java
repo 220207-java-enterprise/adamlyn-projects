@@ -41,7 +41,6 @@ public class TokenService {
                     .setSigningKey(jwtConfig.getSigningKey())
                     .parseClaimsJws(token)
                     .getBody();
-            System.out.println(claims);
 
             Principal principal = new Principal();
             principal.setId(claims.getId());
