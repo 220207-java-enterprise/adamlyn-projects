@@ -1,0 +1,15 @@
+
+
+user get reimbursements
+
+status_id
+type_id
+pending (default)
+
+
+manager get reimbursements
+resolver_id (3)
+status_id
+type_id
+author_id   (2, 3, 6 prob 2)
+all           (default)

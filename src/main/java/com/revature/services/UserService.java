@@ -84,10 +84,9 @@ public class UserService {
 
 
         User authUser = userDAO.getByUsername(username);
-
+        System.out.println(authUser);
         if(!BCrypt.checkpw(password, authUser.getPassword()))
             throw new AuthenticationException();
-
         // Check for if user exists then check if user is active
         if (authUser == null) {
             throw new AuthenticationException();
@@ -106,7 +105,9 @@ public class UserService {
         if (newUser.getRole().getRole().equals("ADMIN"))
             throw new InvalidRequestException("Cannot remove admin");
 
-        newUser.setPassword(BCrypt.hashpw(userUpdate.getPassword(), BCrypt.gensalt(10)));
+
+
+
         UserRole myRole = userRoleDAO.getById(userUpdate.getRole());
 
         //Check for any updates then prepare User to be updated
@@ -118,12 +119,19 @@ public class UserService {
             newUser.setEmail(userUpdate.getEmail());
         if(userUpdate.getUsername() != null)
             newUser.setUsername(userUpdate.getUsername());
-        if(userUpdate.getPassword() != null)
+        if(userUpdate.getPassword() != null) {
             newUser.setPassword(userUpdate.getPassword());
+            if (!isUserValid(newUser)){
+                throw new InvalidRequestException("Bad update details were given.");
+            }
+            newUser.setPassword(BCrypt.hashpw(userUpdate.getPassword(), BCrypt.gensalt(10)));
+        }
         if(userUpdate.isActive() != null )
             newUser.setActive(userUpdate.isActive());
         if(userUpdate.getRole() != null)
             newUser.setRole(myRole);
+
+
 
         if (newUser.getRole().getRole().equals("ADMIN"))
             throw new InvalidRequestException("Cannot promote to admin");

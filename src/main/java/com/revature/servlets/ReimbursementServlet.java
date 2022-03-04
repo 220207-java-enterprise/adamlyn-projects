@@ -91,11 +91,13 @@ public class ReimbursementServlet extends HttpServlet {
         }
 
         ReimbRequest reimbRequest = mapper.readValue(req.getInputStream(), ReimbRequest.class);
+
         logger.debug("ReimbursementServlet #doGet created new object: " + reimbRequest);
         List<ReimbursementResponse> myReimbs;
 
         if(requester.getRole().equals("USER") || requester.getRole().equals("ADMIN")) {
             logger.debug("ReimbursementServlet #doGet confirmed user is not a manager, CONTINUING." );
+
             if(reimbRequest.getStatus_id() != null){
                 logger.debug("ReimbursementServlet #doGet filtering by status." );
                 myReimbs = reimbService.getUserReimbsByStatus(requester.getId(),reimbRequest.getStatus_id());
@@ -105,13 +107,17 @@ public class ReimbursementServlet extends HttpServlet {
                 myReimbs = reimbService.getUserReimbsByType(requester.getId(), reimbRequest.getType_id());
             }else {
                 logger.debug("ReimbursementServlet #doGet filtering by type." );
-                myReimbs = reimbService.getUserReimbs(requester.getId());
+                myReimbs = reimbService.getPendingReimbs(requester.getId());
             }
         }
         else if (!requester.getRole().equals("MANAGER")) {
             logger.debug("ReimbursementServlet #doGet confirmed user is not a manager, FORBIDDEN OPERATION." );
             resp.setStatus(403); // FORBIDDEN
             return;
+        }
+        else if(reimbRequest.getResolver_id() != null){
+            logger.debug("ReimbursementServlet #doGet filtering by history." );
+            myReimbs = reimbService.getReimbsByHistory(reimbRequest.getResolver_id());
         }
         else if(reimbRequest.getStatus_id() != null){
             logger.debug("ReimbursementServlet #doGet filtering by status." );
@@ -121,13 +127,13 @@ public class ReimbursementServlet extends HttpServlet {
             logger.debug("ReimbursementServlet #doGet filtering by type." );
             myReimbs = reimbService.getReimbByType(reimbRequest.getType_id());
         }
-        else if (reimbRequest.getReimb_id() != null) {
-            logger.debug("ReimbursementServlet #doGet getting all reimbursements from User." );
-            myReimbs = reimbService.getUserReimbs(reimbRequest.getAuthor_id());
-        }
+//        else if (reimbRequest.getReimb_id() != null) {
+//            logger.debug("ReimbursementServlet #doGet getting all reimbursements from User." );
+//            myReimbs = reimbService.getUserReimbs(reimbRequest.getAuthor_id());
+//        }
         else if (reimbRequest.getAuthor_id() != null) {
-            logger.debug("ReimbursementServlet #doGet filtering by type." );
-            myReimbs = reimbService.getReimbsByHistory(reimbRequest.getAuthor_id());
+            logger.debug("ReimbursementServlet #doGet filtering by user." );
+            myReimbs = reimbService.getUserReimbs(reimbRequest.getAuthor_id());
         }
         else{
             logger.debug("ReimbursementServlet #doGet getting all reimbursements." );

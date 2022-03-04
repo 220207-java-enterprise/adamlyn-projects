@@ -123,8 +123,10 @@ public class UserServlet extends HttpServlet {
             resp.setStatus(204);
             resp.setContentType("application/json");
 
-        }catch(InvalidRequestException e){
+        }catch(InvalidRequestException e) {
             resp.setStatus(405);
+        }catch(ResourceConflictException e){
+            resp.setStatus(409);
         } catch (Exception e){
             e.printStackTrace();
             resp.setStatus(500);

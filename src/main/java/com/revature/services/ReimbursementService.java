@@ -21,6 +21,7 @@ public class ReimbursementService {
     private ReimbursementStatusDAO reimbursementStatusDAO;
     private UserDAO userDAO;
 
+
     String timeStamp = new SimpleDateFormat("yyyy-MM-dd KK:mm:ss").format(new Date());
 
     public ReimbursementService(ReimbursementDAO reimbursementDAO, ReimbursementTypeDAO reimbursementTypeDAO,
@@ -38,7 +39,7 @@ public class ReimbursementService {
 
         //newRmb.setAmount(convertAmount(newRmb.getAmount()));
         newRmb.setReimb_id(UUID.randomUUID().toString());
-        newRmb.setSubmitted(timeStamp);
+        newRmb.setSubmitted(new SimpleDateFormat("yyyy-MM-dd KK:mm:ss").format(new Date()));
         newRmb.setAuthor_id(author);
 
 
@@ -123,6 +124,16 @@ public class ReimbursementService {
         return rmbResponses;
     }
 
+    //User get their pending reimbs
+    public List<ReimbursementResponse> getPendingReimbs(String id){
+        List<Reimbursement> rmb = reimbursementDAO.userGetPending(id);
+        List<ReimbursementResponse> rmbResponses = new ArrayList<>();
+        for (Reimbursement thisrmb : rmb){
+            rmbResponses.add(new ReimbursementResponse(thisrmb));
+        }
+        return rmbResponses;
+    }
+
     // User get reimbursements by type
     public List<ReimbursementResponse> getReimbByType(String id) {
         List<Reimbursement> rmb = reimbursementDAO.getAllByType(id);
@@ -137,13 +148,17 @@ public class ReimbursementService {
     public void updateReimb(ReimbUpdateRequest reimbUpdate){
 
         Reimbursement newReimb = reimbursementDAO.getById(reimbUpdate.getReimb_id());
+        System.out.println(newReimb);
         ReimbursementStatus newStatus = reimbursementStatusDAO.getById(reimbUpdate.getStatus_id());
-
+        System.out.println(newStatus);
         if (newReimb.getStatus_id().getStatus().equals("APPROVED") ||
             newReimb.getStatus_id().getStatus().equals("DENIED")) {
+            System.out.println("hiya");
             throw new InvalidRequestException("Cannot edit resolved ticket");
         }
+        System.out.println("hi");
         if (!newStatus.getStatus().equals("PENDING") && reimbUpdate.getAuthor_id() != null) {
+            System.out.println("hiuyuyyu");
             throw new InvalidRequestException("User cannot update resolved ticket");
         }
         ReimbursementType myType = reimbursementTypeDAO.getById(reimbUpdate.getType_id());
@@ -161,7 +176,7 @@ public class ReimbursementService {
             newReimb.setAmount(reimbUpdate.getAmount());
         if(reimbUpdate.getSubmitted() == null && reimbUpdate.getAuthor_id()!= null) {
             newReimb.setSubmitted(reimbUpdate.getSubmitted());
-            newReimb.setSubmitted(timeStamp);
+            newReimb.setSubmitted(new SimpleDateFormat("yyyy-MM-dd KK:mm:ss").format(new Date()));
         }
         if(reimbUpdate.getDescription() != null)
             newReimb.setDescription(reimbUpdate.getDescription());
@@ -170,7 +185,7 @@ public class ReimbursementService {
 
         if(reimbUpdate.getResolver_id() != null) {
             newReimb.setResolver_id(myResolver);
-            newReimb.setResolved(timeStamp);
+            newReimb.setResolved(new SimpleDateFormat("yyyy-MM-dd KK:mm:ss").format(new Date()));
         }
 
         if(reimbUpdate.getType_id() != null )

@@ -52,6 +52,14 @@ public class ReimbRequest {
         this.type_id = type_id;
     }
 
+    public String getResolver_id() {
+        return resolver_id;
+    }
+
+    public void setResolver_id(String resolver_id) {
+        this.resolver_id = resolver_id;
+    }
+
     @Override
     public String toString() {
         return "ReimbRequest{" +
