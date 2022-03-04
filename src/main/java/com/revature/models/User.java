@@ -13,7 +13,6 @@ public class User {
 
     private UserRole role;
 
-    // TODO create a Role enum
 
     public User() {
         super(); // not required, but it bugs me personally not to have it

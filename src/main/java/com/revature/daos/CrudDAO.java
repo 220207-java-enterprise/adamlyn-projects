@@ -6,7 +6,6 @@ import java.util.ArrayList;
 public interface CrudDAO <T> {
     void save(T newObject);
     T getById(String id);
-    //T getAll(); // TODO return a dynamically sizeable
     ArrayList<T> getAll();
     void update(T updatedObject);
     void deleteById(String id);

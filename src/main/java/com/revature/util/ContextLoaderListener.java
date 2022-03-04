@@ -18,7 +18,6 @@ import javax.servlet.ServletContextListener;
 
 public class ContextLoaderListener implements ServletContextListener {
 
-    //todo password security > unit testing > loggers
     private static Logger logger = LogManager.getLogger(ContextLoaderListener.class);
 
     @Override

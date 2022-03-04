@@ -81,7 +81,7 @@ public class UserService {
             throw new InvalidRequestException("Invalid credentials provided!");
         }
 
-        // TODO encrypt provided password (assumes password encryption is in place) to see if it matches what is in the DB
+
 
         User authUser = userDAO.getByUsername(username);
 
@@ -159,7 +159,7 @@ public class UserService {
     }
 
 
-    private boolean isUserValid(User appUser) {
+    public boolean isUserValid(User appUser) {
 
         // First name and last name are not just empty strings or filled with whitespace
         if (appUser.getGiven_name().trim().equals("") || appUser.getSurname().trim().equals("")) {

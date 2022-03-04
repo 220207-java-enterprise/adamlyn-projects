@@ -46,7 +46,7 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        logger.debug("UserServlet #doget invoked with args: " + Arrays.asList(req, resp));
+        logger.debug("UserServlet #doGet invoked with args: " + Arrays.asList(req, resp));
 //        HttpSession session = req.getSession(false);
 //        if (session == null) {
 //            resp.setStatus(401);
@@ -54,7 +54,7 @@ public class UserServlet extends HttpServlet {
 //        }
 //        Principal requester = (Principal) session.getAttribute("authUser");
         Principal requester = tokenService.extractRequesterDetails(req.getHeader("Authorization"));
-        logger.debug("UserServlet #doget makes object: " + requester);
+        logger.debug("UserServlet #doGet makes object: " + requester);
         if (requester == null) {
             resp.setStatus(401);
             return;

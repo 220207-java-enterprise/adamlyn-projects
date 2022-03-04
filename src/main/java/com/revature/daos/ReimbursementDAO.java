@@ -307,7 +307,6 @@ public class ReimbursementDAO implements CrudDAO<Reimbursement>{
         return reimbList;       //ReimbursementList.toArray(new Reimbursement[0]);
     }
 
-    // TODO: 2/25/2022
     @Override
     public void update(Reimbursement updatedObject) {
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
