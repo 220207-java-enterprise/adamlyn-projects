@@ -67,9 +67,10 @@ public class AuthServlet extends HttpServlet {
         } catch (InvalidRequestException | DatabindException e) {
             resp.setStatus(400);
         } catch (AuthenticationException e) {
+            logger.warn("No users found with provided Credentials");
             resp.setStatus(401); // UNAUTHORIZED (no user found with provided credentials)
         }catch (ForbiddenException e) {
-            logger.warn("Unauthorized request made by user: " + 
+            logger.warn("Unauthorized login request made by inactive user: ");
             resp.setStatus(403); // Forbidden (user isn't allowed to login to an inactive account)
         } catch (Exception e) {
             e.printStackTrace();
