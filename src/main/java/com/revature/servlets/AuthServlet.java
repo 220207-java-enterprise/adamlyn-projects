@@ -43,11 +43,11 @@ public class AuthServlet extends HttpServlet {
         try {
 
             LoginRequest loginRequest = mapper.readValue(req.getInputStream(), LoginRequest.class);
-            logger.debug("UserServlet #doget created object: " + loginRequest);
+            logger.debug("AuthServlet #doPost created object: " + loginRequest);
             Principal principal = new Principal(userService.login(loginRequest));
-            logger.debug("UserServlet #doget created object: " + principal);
+            logger.debug("AuthServlet #doPost created object: " + principal);
             String payload = mapper.writeValueAsString(principal);
-            logger.debug("UserServlet #doget created Token object");
+            logger.debug("AuthServlet #doPost created Token object");
             String token = tokenService.generateToken(principal);
 
             logger.debug("UserServlet #doPost returned successfully");
@@ -67,10 +67,10 @@ public class AuthServlet extends HttpServlet {
         } catch (InvalidRequestException | DatabindException e) {
             resp.setStatus(400);
         } catch (AuthenticationException e) {
-            logger.warn("No users found with provided Credentials");
+            logger.warn("AuthServlet #doPost No users found with provided Credentials");
             resp.setStatus(401); // UNAUTHORIZED (no user found with provided credentials)
         }catch (ForbiddenException e) {
-            logger.warn("Unauthorized login request made by inactive user: ");
+            logger.warn("AuthServlet #doPost Unauthorized login request made by inactive user: ");
             resp.setStatus(403); // Forbidden (user isn't allowed to login to an inactive account)
         } catch (Exception e) {
             e.printStackTrace();
