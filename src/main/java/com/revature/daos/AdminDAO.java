@@ -5,10 +5,13 @@ import com.revature.models.UserRole;
 import com.revature.util.ConnectionFactory;
 import com.revature.util.exceptions.DataSourceException;
 import com.revature.util.exceptions.ResourcePersistenceException;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 
+
+@Repository
 public class AdminDAO implements CrudDAO<User> {
 
     private final String rootCall = "SELECT " +

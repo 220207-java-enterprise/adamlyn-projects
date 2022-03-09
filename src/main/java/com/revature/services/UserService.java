@@ -13,18 +13,36 @@ import com.revature.util.exceptions.ForbiddenException;
 import com.revature.util.exceptions.InvalidRequestException;
 import com.revature.util.exceptions.ResourceConflictException;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
+@Service
 public class UserService {
 
+    //Field injection
+    @Autowired
     private UserDAO userDAO;
+
+    @Autowired
     private UserRoleDAO userRoleDAO;
 
 
+//    //Setter injection: uses Reflection in order to set private field
+//    @Autowired
+//    public void setUserDAO(UserDAO userDAO, UserRoleDAO userRoleDAO){
+//        this.userDAO = userDAO;
+//        this.userRoleDAO = userRoleDAO;
+//    }
+
+
+    // Constructor injection: If only 1 constructor, can leave annotation off and spring will figure it out
+    @Autowired
     public UserService(UserDAO userDAO, UserRoleDAO userRoleDAO){
         this.userDAO = userDAO;
         this.userRoleDAO = userRoleDAO;

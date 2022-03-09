@@ -5,9 +5,12 @@ import com.revature.util.JwtConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+
+@Service
 public class TokenService {
 
     private JwtConfig jwtConfig;

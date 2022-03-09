@@ -3,6 +3,7 @@ package com.revature.util;
 
 
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -10,6 +11,8 @@ import java.io.*;
 import java.security.Key;
 import java.util.Properties;
 
+
+@Component
 public class JwtConfig {
 
     Properties myprops = new Properties();

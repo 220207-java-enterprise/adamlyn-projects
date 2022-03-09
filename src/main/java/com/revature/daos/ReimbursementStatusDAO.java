@@ -4,6 +4,7 @@ import com.revature.models.ReimbursementStatus;
 import com.revature.models.ReimbursementType;
 import com.revature.util.ConnectionFactory;
 import com.revature.util.exceptions.DataSourceException;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,6 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+
+@Repository
 public class ReimbursementStatusDAO implements CrudDAO<ReimbursementStatus> {
 
     private final String rootCall = "SELECT * FROM ERS_REIMBURSEMENT_STATUSES";

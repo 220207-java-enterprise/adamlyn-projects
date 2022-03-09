@@ -14,6 +14,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mindrot.jbcrypt.BCrypt;
 import org.mockito.Mockito;
 
 import java.sql.SQLException;
@@ -141,8 +142,7 @@ public class UserServiceTest {
         sut.login(loginRequest);
 
     }
-
-    @Ignore
+@Ignore
     @Test
     public void test_login_returnsNonNullAppUser_givenValidAndKnownCredentials() {
 
@@ -153,7 +153,8 @@ public class UserServiceTest {
 
         when(spiedSut.isUsernameValid(loginRequest.getUsername())).thenReturn(true);
         when(spiedSut.isPasswordValid(loginRequest.getPassword())).thenReturn(true);
-        when(mockUserDAO.getByUsernameandPassword(loginRequest.getUsername(), loginRequest.getPassword())).thenReturn(new User());
+       // when(mockUserDAO.getByUsernameandPassword(loginRequest.getUsername(), loginRequest.getPassword())).thenReturn(new User());
+        mock(BCrypt.class);
 
         // Act
         User loginResult = spiedSut.login(loginRequest);
@@ -219,7 +220,7 @@ public class UserServiceTest {
 
     }
 
-    @Ignore
+@Ignore
     @Test(expected = DataSourceException.class)
     public void test_register_propagatesDataSourceException_givenDaoThrows() {
 

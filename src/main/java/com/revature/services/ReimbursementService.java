@@ -6,6 +6,7 @@ import com.revature.dtos.requests.ReimbUpdateRequest;
 import com.revature.dtos.responses.ReimbursementResponse;
 import com.revature.models.*;
 import com.revature.util.exceptions.InvalidRequestException;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -14,6 +15,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.Date;
 
+
+@Service
 public class ReimbursementService {
 
     private ReimbursementDAO reimbursementDAO;

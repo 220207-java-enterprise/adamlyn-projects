@@ -3,6 +3,7 @@ package com.revature.daos;
 import com.revature.models.UserRole;
 import com.revature.util.ConnectionFactory;
 import com.revature.util.exceptions.DataSourceException;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,6 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+
+@Repository
 public class UserRoleDAO implements CrudDAO<UserRole>{
 
     private final String rootCall = "SELECT * FROM ERS_USER_ROLES";

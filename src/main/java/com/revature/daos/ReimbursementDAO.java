@@ -4,6 +4,7 @@ import com.revature.models.*;
 import com.revature.util.ConnectionFactory;
 import com.revature.util.exceptions.DataSourceException;
 import com.revature.util.exceptions.ResourcePersistenceException;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,6 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+
+@Repository
 public class ReimbursementDAO implements CrudDAO<Reimbursement>{
 
     private final String rootSelect = "SELECT " +
