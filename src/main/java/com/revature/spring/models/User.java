@@ -1,7 +1,6 @@
 package com.revature.spring.models;
 
 
-import com.revature.models.UserRole;
 
 import javax.persistence.*;
 
@@ -10,7 +9,8 @@ import javax.persistence.*;
 public class User {
 
     @Id
-    private String user_id;
+    @Column(name = "user_id")
+    private String id;
 
     @Column(nullable = false)
     private String given_name;
@@ -30,7 +30,7 @@ public class User {
     @Column(columnDefinition = "boolean default false")
     private Boolean isActive;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "ROLE_ID")
     private UserRole role;
 
@@ -38,9 +38,9 @@ public class User {
         super();
     }
 
-    public User(String user_id, String given_name, String surname, String email, String username,
+    public User(String id, String given_name, String surname, String email, String username,
                 String password, Boolean isActive, UserRole role) {
-        this.user_id = user_id;
+        this.id = id;
         this.given_name = given_name;
         this.surname = surname;
         this.email = email;
@@ -50,12 +50,12 @@ public class User {
         this.role = role;
     }
 
-    public String getUser_id() {
-        return user_id;
+    public String getId() {
+        return id;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getGiven_name() {

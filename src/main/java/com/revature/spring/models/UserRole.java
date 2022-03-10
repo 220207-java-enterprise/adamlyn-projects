@@ -7,10 +7,9 @@ import javax.persistence.*;
 @Table(name = "ERS_USER_ROLES")
 public class UserRole {
 
-    //TODO ???
-    @OneToMany
     @Id
-    private String role_id;
+    @Column(name = "ROLE_ID")
+    private String id;
 
     @Column(unique = true)
     private String role;
@@ -19,17 +18,17 @@ public class UserRole {
         super();
     }
 
-    public UserRole(String role_id, String role) {
-        this.role_id = role_id;
+    public UserRole(String id, String role) {
+        this.id = id;
         this.role = role;
     }
 
-    public String getRole_id() {
-        return role_id;
+    public String getId() {
+        return id;
     }
 
-    public void setRole_id(String role_id) {
-        this.role_id = role_id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getRole() {

@@ -2,14 +2,13 @@ package com.revature.spring;
 
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@Configuration
-@ComponentScan
+@SpringBootApplication
 public class SpringDriver {
 
     public static void main(String[] args) {
         SpringApplication.run(SpringDriver.class);
+
     }
 }
