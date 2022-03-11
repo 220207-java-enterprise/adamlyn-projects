@@ -21,4 +21,5 @@ public interface UserRepository extends CrudRepository<User, String> {
 
     List<User> getAllByIsActive(Boolean active);
 
+
 }

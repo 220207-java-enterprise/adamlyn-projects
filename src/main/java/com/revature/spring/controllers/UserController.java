@@ -4,12 +4,13 @@ package com.revature.spring.controllers;
 import com.revature.spring.models.User;
 import com.revature.spring.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.Transient;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.UUID;
 
 @Transactional
 @RestController
@@ -49,7 +50,7 @@ public class UserController {
         userList.put("status", "UP");
         userList.put("providedValues", token);
         return userList;
-    }@
+    }
 
     @GetMapping(value = "test5/{something}")
     public HashMap<String, Object> test5(@PathVariable String something) {
