@@ -86,8 +86,8 @@ public class UserService {
 
         User authUser = userRepo.getUserByUsername(username);
         System.out.println(authUser);
-//        if(!BCrypt.checkpw(password, authUser.getPassword()))
-//            throw new AuthenticationException();
+        if(!BCrypt.checkpw(password, authUser.getPassword()))
+            throw new AuthenticationException();
         // Check for if user exists then check if user is active
         if (authUser == null) {
             throw new AuthenticationException();
