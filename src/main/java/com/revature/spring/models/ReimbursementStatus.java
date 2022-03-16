@@ -40,4 +40,12 @@ public class ReimbursementStatus {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "ReimbursementStatus{" +
+                "id='" + id + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }

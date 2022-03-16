@@ -2,6 +2,7 @@ package com.revature.spring.aspects;
 
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
@@ -25,6 +26,12 @@ public class LoggingAspect {
         logger.info("{} invoked at {} with the provided arguments: {}", methodSig, LocalDateTime.now(), methodArgs);
     }
 
+    @After("within(com.revature.spring.services..*)")
+    public void logMethodEnd(JoinPoint jp){
+        String methodSig = extractMethodSignature(jp);
+        String methodArgs = Arrays.toString(jp.getArgs());
+        logger.info("{} invoked at {} with the provided arguments: {}", methodSig, LocalDateTime.now(), methodArgs);
+    }
 
     private String extractMethodSignature(JoinPoint jp){
 //        System.out.println("Target Object = " + jp.getTarget().getClass());

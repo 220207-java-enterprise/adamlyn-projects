@@ -20,7 +20,6 @@
 
             <Logger name="com.revature.spring.aspects" level="DEBUG">
                 <AppenderRef ref="FileAppender"/>
-                <AppenderRef ref="ConsoleAppender"/>
             </Logger>
 
     </Loggers>

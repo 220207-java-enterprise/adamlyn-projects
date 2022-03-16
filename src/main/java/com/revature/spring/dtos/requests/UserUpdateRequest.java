@@ -122,17 +122,17 @@ public class UserUpdateRequest {
             return Objects.hash(user_id, given_name, surname, email, username, password, role);
         }
 
-        @Override
-        public String toString() {
-            return "User{" +
-                    "user_id='" + user_id + '\'' +
-                    ", given_name='" + given_name + '\'' +
-                    ", surname='" + surname + '\'' +
-                    ", email='" + email + '\'' +
-                    ", username='" + username + '\'' +
-                    ", password='" + password + '\'' +
-                    ", isActive=" + isActive +
-                    ", role=" + role +
-                    '}';
-        }
+    @Override
+    public String toString() {
+        return "UserUpdateRequest{" +
+                "user_id='" + user_id + '\'' +
+                ", given_name='" + given_name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", isActive=" + isActive +
+                ", role='" + role + '\'' +
+                '}';
+    }
 }

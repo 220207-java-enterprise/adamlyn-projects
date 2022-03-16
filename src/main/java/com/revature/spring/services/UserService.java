@@ -15,7 +15,6 @@ import com.revature.spring.util.exceptions.ResourceConflictException;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -60,7 +59,7 @@ public class UserService {
             if (!emailAvailable) msg += "email";
             throw new ResourceConflictException(msg);
         }
-        UserRole myRole = UserRoleRepo.getUserRoleById(newUserRequest.getRole());
+        UserRole myRole = UserRoleRepo.getUserRoleByRole(newUserRequest.getRole());
         newUser.setRole(myRole);
 
         System.out.println(myRole);
@@ -101,14 +100,10 @@ public class UserService {
     }
 
     // Admin update user status
-    public void updateUser(UserUpdateRequest userUpdate) throws IOException {
+    public void updateUser(UserUpdateRequest userUpdate){
         User newUser = userRepo.getUserById(userUpdate.getUser_id());
-        System.out.println(newUser);
         if (newUser.getRole().getRole().equals("ADMIN"))
             throw new InvalidRequestException("Cannot remove admin");
-
-
-
 
         UserRole myRole = UserRoleRepo.getUserRoleById(userUpdate.getRole());
 
@@ -138,7 +133,6 @@ public class UserService {
         if (newUser.getRole().getRole().equals("ADMIN"))
             throw new InvalidRequestException("Cannot promote to admin");
 
-        System.out.println(newUser);
         userRepo.save(newUser);
     }
 

@@ -143,4 +143,21 @@ public class Reimbursement {
     public void setType_id(ReimbursementType type_id) {
         this.type = type_id;
     }
+
+    @Override
+    public String toString() {
+        return "Reimbursement{" +
+                "id='" + id + '\'' +
+                ", amount=" + amount +
+                ", submitted='" + submitted + '\'' +
+                ", resolved='" + resolved + '\'' +
+                ", description='" + description + '\'' +
+                ", receipt='" + receipt + '\'' +
+                ", payment_id='" + payment_id + '\'' +
+                ", author=" + author +
+                ", resolver=" + resolver +
+                ", status=" + status +
+                ", type=" + type +
+                '}';
+    }
 }

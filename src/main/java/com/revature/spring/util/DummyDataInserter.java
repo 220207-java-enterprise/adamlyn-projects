@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
 public class DummyDataInserter implements CommandLineRunner {
 
@@ -26,7 +24,7 @@ public class DummyDataInserter implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         User user1 = new User();
-        user1.setId(UUID.randomUUID().toString());
+        user1.setId("1");
         user1.setGiven_name("Guy");
         user1.setSurname("Dood");
         user1.setEmail("guydood@gmail.com");
@@ -36,7 +34,7 @@ public class DummyDataInserter implements CommandLineRunner {
         user1.setRole(new UserRole("1", "ADMIN"));
 
         User user2 = new User();
-        user2.setId(UUID.randomUUID().toString());
+        user2.setId("2");
         user2.setGiven_name("Lady");
         user2.setSurname("Gal");
         user2.setEmail("ladygal@gmail.com");

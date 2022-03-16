@@ -1,77 +1,74 @@
 package com.revature.spring.controllers;
 
 
+import com.revature.spring.dtos.requests.NewUserRequest;
+import com.revature.spring.dtos.requests.UserUpdateRequest;
+import com.revature.spring.dtos.responses.UserResponse;
 import com.revature.spring.models.User;
-import com.revature.spring.repos.UserRepository;
+import com.revature.spring.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.UUID;
+import java.util.List;
 
 @Transactional
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
-    private UserRepository userRepo;
+    private UserService userService;
 
     @Autowired
-    public UserController(UserRepository userRepo){
-        this.userRepo = userRepo;
+    public UserController(UserService userService){
+        this.userService = userService;
     }
 
-    @GetMapping
-    public String userInterface() {
-        return "we did it";
-    }
-
-    @GetMapping(value = "test2")
-    public String test2() {
-        return "we did another it";
-    }
-
-    @GetMapping(value = "test3")
-    public HashMap<String, Object> test3(@RequestParam String id) {
+    // Admin get all users
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping()
+    public HashMap<String, Object> getAllUsers() {
         HashMap<String, Object> userList = new HashMap<String, Object>();
-        userList.put("endpoint", " /test3");
+        List<UserResponse> myUsers = userService.getAllEmployees();
+        userList.put("endpoint", " /user");
         userList.put("status", "UP");
-        userList.put("providedValues", Arrays.asList(id));
+        userList.put("providedValues", myUsers);
         return userList;
     }
 
-    @GetMapping(value = "test4")
-    public HashMap<String, Object> test4(@RequestHeader(value = "Authorization", required = false) String token) {
-        HashMap<String, Object> userList = new HashMap<String, Object>();
-        userList.put("endpoint", " /test4");
-        userList.put("status", "UP");
-        userList.put("providedValues", token);
-        return userList;
+
+    //TODO security
+    // Admin update user
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping(produces = "application/json", consumes = "application/json")
+    public void update(@RequestBody UserUpdateRequest userUpdateRequest) {
+        userService.updateUser(userUpdateRequest);
     }
 
-    @GetMapping(value = "test5/{something}")
-    public HashMap<String, Object> test5(@PathVariable String something) {
-        HashMap<String, Object> userList = new HashMap<String, Object>();
-        userList.put("endpoint", " /test5");
-        userList.put("status", "UP");
-        userList.put("providedValues", something);
-        return userList;
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping(produces = "application/json", consumes = "application/json")
+    public void delete(@RequestBody UserUpdateRequest userUpdateRequest) {
+        userService.updateUser(userUpdateRequest);
     }
 
+
+    // Register as User/Manager
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(value = "test6", produces = "application/json", consumes = "application/json")
-    public HashMap<String, Object> test6(@RequestBody User userData){
+    @PostMapping(produces = "application/json", consumes = "application/json")
+    public HashMap<String, Object> register(@RequestBody NewUserRequest newUserRequest){
         HashMap<String, Object> userList = new HashMap<String, Object>();
-        System.out.println(userList);
-        userList.put("endpoint", " /test5");
+
+        User newUser = userService.register(newUserRequest);
+        UserResponse userResponse = new UserResponse(newUser);
+
+        userList.put("endpoint", " /register");
         userList.put("status", "UP");
-        userList.put("providedValues", userData);
-        userData.setId(UUID.randomUUID().toString());
+        userList.put("providedValues", userResponse);
         System.out.println(userList);
-        userRepo.save(userData);
+        System.out.println(newUser);
+
         return userList;
     }
 }
