@@ -11,23 +11,18 @@
             <PatternLayout pattern="${layout}"/>
         </Console>
 
-        <File name="FileAppender" filename="${logdir}/foundA.log">
+        <File name="FileAppender" filename="${logdir}/logs.log">
             <PatternLayout pattern="${layout}"/>
         </File>
     </Appenders>
 
     <Loggers>
 
-            <Logger name="FileLogger" level="DEBUG">
+            <Logger name="com.revature.spring.aspects" level="DEBUG">
                 <AppenderRef ref="FileAppender"/>
                 <AppenderRef ref="ConsoleAppender"/>
             </Logger>
 
-
-        <Root level = "DEBUG">
-            <AppenderRef ref="ConsoleAppender"/>
-            <AppenderRef ref="FileAppender"/>
-        </Root>
     </Loggers>
 
 

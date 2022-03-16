@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -31,7 +32,6 @@ public class AuthController {
         System.out.println(principal);
 
         String token = tokenService.generateToken(principal);
-
         return token;
     }
 
