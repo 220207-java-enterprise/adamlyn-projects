@@ -24,8 +24,8 @@ public class AuthController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(value = "test6", produces = "application/json", consumes = "application/json")
-    public String test6(@RequestBody LoginRequest loginRequest){
+    @PostMapping(produces = "application/json", consumes = "application/json")
+    public String auth(@RequestBody LoginRequest loginRequest){
         System.out.println(loginRequest);
 
         Principal principal = new Principal(userService.login(loginRequest));

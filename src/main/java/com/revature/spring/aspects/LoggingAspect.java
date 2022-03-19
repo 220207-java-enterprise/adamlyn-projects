@@ -2,9 +2,7 @@ package com.revature.spring.aspects;
 
 
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -26,11 +24,17 @@ public class LoggingAspect {
         logger.info("{} invoked at {} with the provided arguments: {}", methodSig, LocalDateTime.now(), methodArgs);
     }
 
-    @After("within(com.revature.spring.services..*)")
-    public void logMethodEnd(JoinPoint jp){
+    @AfterReturning(value = "within(com.revature.spring.controllers..*)", returning = "returnedObj")
+    public void logMethodReturn(JoinPoint jp, Object returnedObj){
         String methodSig = extractMethodSignature(jp);
-        String methodArgs = Arrays.toString(jp.getArgs());
-        logger.info("{} invoked at {} with the provided arguments: {}", methodSig, LocalDateTime.now(), methodArgs);
+        logger.info("{} successfully returned at {} with value: {}", methodSig, LocalDateTime.now(), returnedObj);
+    }
+
+    @AfterThrowing(value = "within(com.revature.spring.controllers..*)", throwing = "t")
+    public void logMethodException(JoinPoint jp, Throwable t){
+        String methodSig = extractMethodSignature(jp);
+        String exceptionName = t.getClass().getName();
+        logger.warn("{} was thrown in the method {} at {} with message {}", exceptionName, methodSig, LocalDateTime.now(), t.getMessage());
     }
 
     private String extractMethodSignature(JoinPoint jp){
