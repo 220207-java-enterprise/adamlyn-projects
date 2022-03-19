@@ -52,17 +52,7 @@ public class SecurityAspect {
         Principal requester = tokenService.extractRequesterDetails(getCurrentRequest().getHeader("Authorization"));
         if (requester != null) {
             for (String myRole : myAnnotation.allowedRoles()) {
-                System.out.println(requester);
-                System.out.println("myRole: " +myRole);
-                System.out.println("requester.getRole()): " +requester.getRole());
-
-                //Can't put in same println statement for some reason
-                System.out.println("myRole == requester.getRole()) ");
-                System.out.println(myRole == requester.getRole());
-
-
                 if (Objects.equals(myRole, requester.getRole())) {
-                    System.out.println("WE WANT TO BE HERE");
                     securityContext.setRequester(requester);
                     return;
                 }
