@@ -19,6 +19,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 @Aspect
 @Component
@@ -60,7 +61,7 @@ public class SecurityAspect {
                 System.out.println(myRole == requester.getRole());
 
 
-                if (myRole == requester.getRole()) {
+                if (Objects.equals(myRole, requester.getRole())) {
                     System.out.println("WE WANT TO BE HERE");
                     securityContext.setRequester(requester);
                     return;

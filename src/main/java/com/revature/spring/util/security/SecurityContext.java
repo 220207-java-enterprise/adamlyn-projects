@@ -8,10 +8,11 @@ import org.springframework.web.context.annotation.RequestScope;
 @Component
 @RequestScope
 public class SecurityContext {
+
     private Principal requester;
 
-    public SecurityContext(Principal requester) {
-        this.requester = requester;
+    public Principal getRequester(){
+        return requester;
     }
 
     public void setRequester(Principal requester) {
